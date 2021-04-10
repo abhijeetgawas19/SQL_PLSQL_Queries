@@ -1,0 +1,353 @@
+Q2. Consider the following Entities and Relationship
+Department (dept_no, dept_name, location)
+Employee(emp_no,emp_name,address,salary,designation)
+Relation between Department and Employee is One to Many
+Constraints: Primary Key, salary should be>0
+
+Solution:
+SQL> create table Department
+  2  (dept_no number(5) primary key,
+  3  dept_name varchar(50) NOT NULL UNIQUE,
+  4  location varchar(50) NOT NULL);
+
+Table created.
+
+SQL> describe Department;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DEPT_NO                                   NOT NULL NUMBER(5)
+ DEPT_NAME                                 NOT NULL VARCHAR2(50)
+ LOCATION                                  NOT NULL VARCHAR2(50)
+
+SQL> insert into Department values (1,'Computer Science','Pune');
+
+1 row created.
+
+SQL> insert into Department values (2,'Information Technology','Pune');
+
+1 row created.
+
+SQL> insert into Department values (3,'Mechanical','Mumbai');
+
+1 row created.
+
+SQL> insert into Department values (4,'Electrical','Mumbai');
+
+1 row created.
+
+SQL> insert into Department values (5,'Chemical','Aurangabad');
+
+1 row created.
+
+SQL> select * from Department;
+
+   DEPT_NO DEPT_NAME
+---------- --------------------------------------------------
+LOCATION
+--------------------------------------------------
+         1 Computer Science
+Pune
+
+         2 Information Technology
+Pune
+
+         3 Mechanical
+Mumbai
+
+
+   DEPT_NO DEPT_NAME
+---------- --------------------------------------------------
+LOCATION
+--------------------------------------------------
+         4 Electrical
+Mumbai
+
+         5 Chemical
+Aurangabad
+
+SQL> create table Employee
+  2  (emp_no number(3) primary key,
+  3  emp_name varchar(50) NOT NULL UNIQUE,
+  4  address varchar(250) NOT NULL,
+  5  salary number(8) NOT NULL CHECK(salary>0),
+  6  designation varchar(50) NOT NULL,
+  7  dept_no number(5) references Department(dept_no));
+
+Table created.
+
+SQL> describe Employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_NO                                    NOT NULL NUMBER(3)
+ EMP_NAME                                  NOT NULL VARCHAR2(50)
+ ADDRESS                                   NOT NULL VARCHAR2(250)
+ SALARY                                    NOT NULL NUMBER(8)
+ DESIGNATION                               NOT NULL VARCHAR2(50)
+ DEPT_NO                                            NUMBER(5)
+
+SQL> insert into Employee values(101,'Abhijeet Gawas','Pune',1200000,'Data Scientist',1);
+
+1 row created.
+
+SQL> insert into Employee values(102,'Ameya Kulkarni','Pune',1000000,'Cloud Architect',1);
+
+1 row created.
+
+SQL> insert into Employee values(103,'Pratik Jadhav','Mumbai',550000,'Web Developer',1);
+
+1 row created.
+
+SQL> insert into Employee values(104,'Sunanda Gowikar','Mumbai',750000,'Software Project Manager',2);
+
+1 row created.
+
+SQL> insert into Employee values(105,'Rajashree Birajdar','Kolhapur',350000,'Graduate Trainee',2);
+
+1 row created.
+
+SQL> insert into Employee values(106,'Manohar Virjee','Delhi',550000,'Lead Engineer',3);
+
+1 row created.
+
+SQL> insert into Employee values(107,'Radhika Joshi','Mumbai',550000,'Lead Engineer',4);
+
+1 row created.
+
+SQL> insert into Employee values(108,'Anupriya Kulkarni','Pune',950000,'Research Head',5);
+
+1 row created.
+
+SQL> insert into Employee values(109,'Manpreet Singh Lamba','Punjab',755000,'Head of Department',5);
+
+1 row created.
+
+SQL> insert into Employee values(110,'Janvi Sudhir','Lucknow',1000000,'Jr Data Analyst',1);
+
+1 row created.
+
+SQL> select * from Employee;
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+    SALARY DESIGNATION                                           DEPT_NO
+---------- -------------------------------------------------- ----------
+       101 Abhijeet Gawas
+Pune
+   1200000 Data Scientist                                              1
+
+       102 Ameya Kulkarni
+Pune
+   1000000 Cloud Architect                                             1
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+    SALARY DESIGNATION                                           DEPT_NO
+---------- -------------------------------------------------- ----------
+
+       103 Pratik Jadhav
+Mumbai
+    550000 Web Developer                                               1
+
+       104 Sunanda Gowikar
+Mumbai
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+    SALARY DESIGNATION                                           DEPT_NO
+---------- -------------------------------------------------- ----------
+    750000 Software Project Manager                                    2
+
+       105 Rajashree Birajdar
+Kolhapur
+    350000 Graduate Trainee                                            2
+
+       106 Manohar Virjee
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+    SALARY DESIGNATION                                           DEPT_NO
+---------- -------------------------------------------------- ----------
+Delhi
+    550000 Lead Engineer                                               3
+
+       107 Radhika Joshi
+Mumbai
+    550000 Lead Engineer                                               4
+
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+    SALARY DESIGNATION                                           DEPT_NO
+---------- -------------------------------------------------- ----------
+       108 Anupriya Kulkarni
+Pune
+    950000 Research Head                                               5
+
+       109 Manpreet Singh Lamba
+Punjab
+    755000 Head of Department                                          5
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+    SALARY DESIGNATION                                           DEPT_NO
+---------- -------------------------------------------------- ----------
+
+       110 Janvi Sudhir
+Lucknow
+   1000000 Jr Data Analyst                                             1
+
+
+10 rows selected.
+
+Q1. Find the total salary of all computer science department employees.
+Sol:
+SQL> select count(Employee.emp_no) as Employee_Count, sum(Employee.salary) as Salary_Count
+  2  from Department,Employee
+  3  where Department.dept_no=Employee.dept_no and Department.dept_name='Computer Science';
+
+EMPLOYEE_COUNT SALARY_COUNT
+-------------- ------------
+             4      3750000
+
+Q2. Find the name of employee whose salary is greater than 10 Lakhs.
+Sol:
+SQL> select Employee.emp_no as Employee_No, Employee.emp_name as Employee_Name, Department.dept_name as Department_Name
+  2  from Employee, Department
+  3  where Department.dept_no=Employee.dept_no and Employee.salary>=1000000;
+
+EMPLOYEE_NO EMPLOYEE_NAME
+----------- --------------------------------------------------
+DEPARTMENT_NAME
+--------------------------------------------------
+        110 Janvi Sudhir
+Computer Science
+
+        102 Ameya Kulkarni
+Computer Science
+
+        101 Abhijeet Gawas
+Computer Science
+
+Q3. Count the number of employee in each department
+Sol:
+SQL> select Department.dept_name as Department_Name, count(Employee.emp_no) as Count_of_Employee
+  2  from Employee,Department
+  3  where Department.dept_no = Employee.dept_no
+  4  group by Department.dept_name;
+
+DEPARTMENT_NAME                                    COUNT_OF_EMPLOYEE
+-------------------------------------------------- -----------------
+Mechanical                                                         1
+Information Technology                                             2
+Chemical                                                           2
+Computer Science                                                   4
+Electrical                                                         1
+
+Q4. Display maximum salary of each department
+Sol:
+SQL> select Department.dept_name as Department_Name, max(Employee.salary) as Maximum_Salary
+  2  from Employee,Department
+  3  where Department.dept_no = Employee.dept_no
+  4  group by Department.dept_name;
+
+DEPARTMENT_NAME                                    MAXIMUM_SALARY
+-------------------------------------------------- --------------
+Mechanical                                                 550000
+Information Technology                                     750000
+Chemical                                                   950000
+Computer Science                                          1200000
+Electrical                                                 550000
+
+Q5. Display department wise employee list
+Sol:
+
+SQL> select Employee.emp_no, Employee.emp_name, Department.dept_name
+  2  from Employee, Department
+  3  where Department.dept_no = Employee.dept_no and Department.dept_name='Computer Science';
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+DEPT_NAME
+--------------------------------------------------
+       101 Abhijeet Gawas
+Computer Science
+
+       102 Ameya Kulkarni
+Computer Science
+
+       103 Pratik Jadhav
+Computer Science
+
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+DEPT_NAME
+--------------------------------------------------
+       110 Janvi Sudhir
+Computer Science
+
+SQL> select Employee.emp_no, Employee.emp_name, Department.dept_name
+  2  from Employee, Department
+  3  where Department.dept_no = Employee.dept_no and Department.dept_name='Information Technology';
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+DEPT_NAME
+--------------------------------------------------
+       104 Sunanda Gowikar
+Information Technology
+
+       105 Rajashree Birajdar
+Information Technology
+
+SQL> select Employee.emp_no, Employee.emp_name, Department.dept_name
+  2  from Employee, Department
+  3  where Department.dept_no = Employee.dept_no and Department.dept_name='Mechanical';
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+DEPT_NAME
+--------------------------------------------------
+       106 Manohar Virjee
+Mechanical
+
+SQL> select Employee.emp_no, Employee.emp_name, Department.dept_name
+  2  from Employee, Department
+  3  where Department.dept_no = Employee.dept_no and Department.dept_name='Chemical';
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+DEPT_NAME
+--------------------------------------------------
+       108 Anupriya Kulkarni
+Chemical
+
+       109 Manpreet Singh Lamba
+Chemical
+
+SQL> select Employee.emp_no, Employee.emp_name, Department.dept_name
+  2  from Employee, Department
+  3  where Department.dept_no = Employee.dept_no and Department.dept_name='Electrical';
+
+    EMP_NO EMP_NAME
+---------- --------------------------------------------------
+DEPT_NAME
+--------------------------------------------------
+       107 Radhika Joshi
+Electrical
+
+SQL> commit;
+
+Commit complete.
