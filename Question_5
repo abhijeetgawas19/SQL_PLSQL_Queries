@@ -1,0 +1,511 @@
+Q5. Consider the following Entities and Relationship
+Book (book_no,title,author,price,year_published)
+Customer (cid,cname,addr)
+Relation between Book and Customer is Many to Many with quantity as descriptive attribute
+Constraints: Primary Key, price>0, quantity>0
+
+Solution:
+SQL> create table Book
+  2  (book_no number(5) primary key,
+  3  title varchar2(200) NOT NULL UNIQUE,
+  4  author varchar2(150) NOT NULL,
+  5  price number(6,2) NOT NULL check(price>0),
+  6  year_published number(4) NOT NULL);
+
+Table created.
+
+SQL> describe Book;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BOOK_NO                                   NOT NULL NUMBER(5)
+ TITLE                                     NOT NULL VARCHAR2(200)
+ AUTHOR                                    NOT NULL VARCHAR2(150)
+ PRICE                                     NOT NULL NUMBER(6,2)
+ YEAR_PUBLISHED                            NOT NULL NUMBER(4)
+
+SQL> insert into Book values (1,'Programming in C','Yashwant Kantekar',120.00,1999);
+
+1 row created.
+
+SQL> insert into Book values (2,'Database Management System','S Sudharshan',670.50,2015);
+
+1 row created.
+
+SQL> insert into Book values (3,'Operating System Concepts','G Galvin',470.50,2005);
+
+1 row created.
+
+SQL> insert into Book values (4,'Software Engineering','Roger Pressman',1050.00,2012);
+
+1 row created.
+
+SQL> insert into Book values (5,'Software Project Management','Ian Sommerville',450.00,2017);
+
+1 row created.
+
+SQL> insert into Book values(6,'Indian Economics','Uday Mohite',200.00,2013);
+
+1 row created.
+
+SQL> select * from Book;
+
+   BOOK_NO
+----------
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+         1
+Programming in C
+Yashwant Kantekar
+       120           1999
+
+
+   BOOK_NO
+----------
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+         2
+Database Management System
+S Sudharshan
+     670.5           2015
+
+
+   BOOK_NO
+----------
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+         3
+Operating System Concepts
+G Galvin
+     470.5           2005
+
+
+   BOOK_NO
+----------
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+         4
+Software Engineering
+Roger Pressman
+      1050           2012
+
+
+   BOOK_NO
+----------
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+         5
+Software Project Management
+Ian Sommerville
+       450           2017
+
+
+   BOOK_NO
+----------
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+         6
+Indian Economics
+Uday Mohite
+       200           2013
+
+
+6 rows selected.
+
+SQL> create table Customer_
+  2  (cid number(5) primary key,
+  3  cname varchar(200) NOT NULL,
+  4  addr varchar(150) NOT NULL,
+  5  book_no number(5) references Book(book_no));
+
+Table created.
+
+SQL> describe Customer_;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CID                                       NOT NULL NUMBER(5)
+ CNAME                                     NOT NULL VARCHAR2(200)
+ ADDR                                      NOT NULL VARCHAR2(150)
+ BOOK_NO                                            NUMBER(5)
+
+SQL> insert into Customer_ values (10001,'Abhijeet Gawas','Pune',1);
+
+1 row created.
+
+SQL> insert into Customer_ values (10002,'Ameya Kulkarni','Pune',1);
+
+1 row created.
+
+SQL> insert into Customer_ values (10003,'Manisha Khot','Mumbai',2);
+
+1 row created.
+
+SQL> insert into Customer_ values (10004,'Shurti Shinde','Mumbai',2);
+
+1 row created.
+
+SQL> insert into Customer_ values (10005,'Lalit Padekar','Nagpur',3);
+
+1 row created.
+
+SQL> insert into Customer_ values (10006,'Komal Patekar','Nagpur',3);
+
+1 row created.
+
+SQL> insert into Customer_ values (10007,'Sourabh Palandi','Ratnagiri',4);
+
+1 row created.
+
+SQL> insert into Customer_ values (10008,'Rohan Kamble','Mumbai',4);
+
+1 row created.
+
+SQL> insert into Customer_ values (10009,'Shubra Mohite','Pune',5);
+
+1 row created.
+
+SQL> insert into Customer_ values (10010,'Sayali Devkar','Aurangabad',5);
+
+1 row created.
+
+SQL> select * from Customer_;
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10001
+Abhijeet Gawas
+Pune
+         1
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10002
+Ameya Kulkarni
+Pune
+         1
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10003
+Manisha Khot
+Mumbai
+         2
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10004
+Shurti Shinde
+Mumbai
+         2
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10005
+Lalit Padekar
+Nagpur
+         3
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10006
+Komal Patekar
+Nagpur
+         3
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10007
+Sourabh Palandi
+Ratnagiri
+         4
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10008
+Rohan Kamble
+Mumbai
+         4
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10009
+Shubra Mohite
+Pune
+         5
+
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+     10010
+Sayali Devkar
+Aurangabad
+         5
+
+
+10 rows selected.
+
+SQL> create table Customer_Book
+  2  (book_no number(5) references Book(book_no),
+  3  cid number(5) references Customer_(cid),
+  4  quantity number(5) NOT NULL check(quantity>0));
+
+Table created.
+
+SQL> describe Customer_Book;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BOOK_NO                                            NUMBER(5)
+ CID                                                NUMBER(5)
+ QUANTITY                                  NOT NULL NUMBER(5)
+
+SQL> insert into Customer_Book values(1,10001,35);
+
+1 row created.
+
+SQL> insert into Customer_Book values(2,10002,25);
+
+1 row created.
+
+SQL> insert into Customer_Book values(3,10003,15);
+
+1 row created.
+
+SQL> insert into Customer_Book values(4,10004,25);
+
+1 row created.
+
+SQL> insert into Customer_Book values(5,10005,08);
+
+1 row created.
+
+SQL> select * from Customer_Book;
+
+   BOOK_NO        CID   QUANTITY
+---------- ---------- ----------
+         1      10001         35
+         2      10002         25
+         3      10003         15
+         4      10004         25
+         5      10005          8
+
+Q1. Display customer details from Mumbai
+Sol:
+SQL> select Customer_.cid, Customer_.cname
+  2  from Customer_
+  3  where Customer_.addr='Mumbai';
+
+       CID
+----------
+CNAME
+--------------------------------------------------------------------------------
+     10003
+Manisha Khot
+
+     10004
+Shurti Shinde
+
+     10008
+Rohan Kamble
+
+Q2. Display author wise details of book
+Sol:
+SQL> select Book.title, Book.author, Book.price, Book.year_published
+  2  from Book
+  3  order by Book.author;
+
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+Operating System Concepts
+G Galvin
+     470.5           2005
+
+Software Project Management
+Ian Sommerville
+       450           2017
+
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+
+Software Engineering
+Roger Pressman
+      1050           2012
+
+Database Management System
+S Sudharshan
+
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+     670.5           2015
+
+Indian Economics
+Uday Mohite
+       200           2013
+
+Programming in C
+
+TITLE
+--------------------------------------------------------------------------------
+AUTHOR
+--------------------------------------------------------------------------------
+     PRICE YEAR_PUBLISHED
+---------- --------------
+Yashwant Kantekar
+       120           1999
+
+
+6 rows selected.
+
+Q3. Display all customer who purchased the books published in year 2013
+Sol:
+SQL> select Customer_.cname
+  2  from Book, Customer_,Customer_Book
+  3  where Book.book_no = Customer_Book.book_no and Customer_.cid = Customer_Book.cid and Book.year_published=2013;
+
+no rows selected
+
+Q4. Display customer that has purchased more than 3 books.
+Sol:
+SQL> select Customer_.cname, Customer_Book.quantity
+  2  from Book, Customer_, Customer_Book
+  3  where Book.book_no = Customer_Book.book_no and Customer_.cid = Customer_Book.cid and Customer_Book.quantity>=3;
+
+CNAME
+--------------------------------------------------------------------------------
+  QUANTITY
+----------
+Abhijeet Gawas
+        35
+
+Ameya Kulkarni
+        25
+
+Manisha Khot
+        15
+
+
+CNAME
+--------------------------------------------------------------------------------
+  QUANTITY
+----------
+Shurti Shinde
+        25
+
+Lalit Padekar
+         8
+
+Q5. Display book names having price between 100 and 200 and published in the year 2013.
+Sol:
+SQL> select Book.title
+  2  from Book
+  3  where Book.price in (100,200) and Book.year_published=2013;
+
+TITLE
+--------------------------------------------------------------------------------
+Indian Economics
+
+SQL> commit;
+
+Commit complete.
