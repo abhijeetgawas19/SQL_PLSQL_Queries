@@ -1,0 +1,298 @@
+Q4. Consider the following Entities and Relationship
+Room (roomo, dest, rate)
+Guest (gno,gname,no_of_days)
+Relation between Room and Guest is One to One
+Constraints: Primary Key, no_of_days>0
+
+Solution:
+SQL> create table Room
+  2  (roomno number(2) primary key,
+  3  dest varchar(10) NOT NULL,
+  4  rate number(6,2) NOT NULL check(rate>0));
+
+Table created.
+
+SQL> describe Room;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ROOMNO                                    NOT NULL NUMBER(2)
+ DEST                                      NOT NULL VARCHAR2(10)
+ RATE                                      NOT NULL NUMBER(6,2)
+
+SQL> insert into Room values (1,'Non A/C',250);
+
+1 row created.
+
+SQL> insert into Room values (2,'Non A/C',250);
+
+1 row created.
+
+SQL> insert into Room values (3,'Non A/C',250);
+
+1 row created.
+
+SQL> insert into Room values (4,'A/C',350);
+
+1 row created.
+
+SQL> insert into Room values (5,'A/C',350);
+
+1 row created.
+
+SQL> insert into Room values (6,'A/C',350);
+
+1 row created.
+
+SQL> insert into Room values (7,'A/C',450);
+
+1 row created.
+
+SQL> insert into Room values (8,'A/C',450);
+
+1 row created.
+
+SQL> insert into Room values (9,'A/C',450);
+
+1 row created.
+
+SQL> select * from Room;
+
+    ROOMNO DEST             RATE
+---------- ---------- ----------
+         1 Non A/C           250
+         2 Non A/C           250
+         3 Non A/C           250
+         4 A/C               350
+         5 A/C               350
+         6 A/C               350
+         7 A/C               450
+         8 A/C               450
+         9 A/C               450
+
+9 rows selected.
+
+SQL> create table Guest
+  2  (gno number(8) primary key,
+  3  gname varchar2(200) NOT NULL,
+  4  no_of_days number(5) NOT NULL check(no_of_days>0),
+  5  roomno number(2) references Room(roomno));
+
+Table created.
+
+SQL> describe Guest;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ GNO                                       NOT NULL NUMBER(8)
+ GNAME                                     NOT NULL VARCHAR2(200)
+ NO_OF_DAYS                                NOT NULL NUMBER(5)
+ ROOMNO                                             NUMBER(2)
+
+SQL> insert into Guest values(101,'Prakash Mehta',2,1);
+
+1 row created.
+
+SQL> insert into Guest values(102,'Manisha Jadhav',5,2);
+
+1 row created.
+
+SQL> insert into Guest values(103,'Suneil Singh',10,3);
+
+1 row created.
+
+SQL> insert into Guest values(104,'Rakesh Verma',2,4);
+
+1 row created.
+
+SQL> insert into Guest values(105,'Nidhi Pandey',12,5);
+
+1 row created.
+
+SQL> insert into Guest values(106,'Maria Mathew',7,6);
+
+1 row created.
+
+SQL> insert into Guest values(107,'Nandini Sharma',10,7);
+
+1 row created.
+
+SQL> insert into Guest values(108,'Abhijeet Gawas',1,8);
+
+1 row created.
+
+SQL> insert into Guest values(109,'Lalita Joshi',5,9);
+
+1 row created.
+
+SQL> select * from Guest;
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+NO_OF_DAYS     ROOMNO
+---------- ----------
+       101
+Prakash Mehta
+         2          1
+
+       102
+Manisha Jadhav
+         5          2
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+NO_OF_DAYS     ROOMNO
+---------- ----------
+
+       103
+Suneil Singh
+        10          3
+
+       104
+Rakesh Verma
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+NO_OF_DAYS     ROOMNO
+---------- ----------
+         2          4
+
+       105
+Nidhi Pandey
+        12          5
+
+       106
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+NO_OF_DAYS     ROOMNO
+---------- ----------
+Maria Mathew
+         7          6
+
+       107
+Nandini Sharma
+        10          7
+
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+NO_OF_DAYS     ROOMNO
+---------- ----------
+       108
+Abhijeet Gawas
+         1          8
+
+       109
+Lalita Joshi
+         5          9
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+NO_OF_DAYS     ROOMNO
+---------- ----------
+
+
+9 rows selected.
+
+Q1. Display room details according to its rates in ascending order
+Sol:
+SQL> select Room.roomno, Room.dest, Room.rate
+  2  from Room
+  3  order by Room.rate asc;
+
+    ROOMNO DEST             RATE
+---------- ---------- ----------
+         1 Non A/C           250
+         2 Non A/C           250
+         3 Non A/C           250
+         4 A/C               350
+         5 A/C               350
+         6 A/C               350
+         7 A/C               450
+         8 A/C               450
+         9 A/C               450
+
+9 rows selected.
+
+Q2. Find the names of guest who has allocated room for more than 3 days.
+Sol:
+SQL> select Guest.gno, Guest.gname
+  2  from Room, Guest
+  3  where Room.roomno = Guest.roomno and Guest.no_of_days>3;
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+       102
+Manisha Jadhav
+
+       103
+Suneil Singh
+
+       105
+Nidhi Pandey
+
+
+       GNO
+----------
+GNAME
+--------------------------------------------------------------------------------
+       106
+Maria Mathew
+
+       107
+Nandini Sharma
+
+       109
+Lalita Joshi
+
+
+6 rows selected.
+
+Q3. Find no of AC Rooms
+Sol:
+SQL> select count(Room.roomno)
+  2  from Room
+  3  where Room.dest='A/C';
+
+COUNT(ROOM.ROOMNO)
+------------------
+                 6
+
+Q4. Display total amount for Non/Ac rooms
+Sol:
+SQL> select distinct (Room.rate) as Rate
+  2  from Room
+  3  where Room.dest='Non A/C';
+
+      RATE
+----------
+       250
+
+Q5. Find the names of guest with maximum room charges.
+Sol:
+SQL> select Guest.gname as Customer_Name
+  2  from Room,Guest
+  3  where Room.roomno = Guest.roomno and Room.rate=(select distinct (max(Room.rate)) from Room);
+
+CUSTOMER_NAME
+--------------------------------------------------------------------------------
+Nandini Sharma
+Abhijeet Gawas
+Lalita Joshi
+
+SQL> commit;
+
+Commit complete.
