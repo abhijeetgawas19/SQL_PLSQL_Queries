@@ -1,0 +1,343 @@
+Q3. Consider the following Entities and Relationship
+Project (pno, pname, start_date, budget, status)
+Department(dno,dname,hod)
+Relation between Project and Department is Many to One
+Constraints: Primary Key,
+Project Status Constraints:
+C - Complete
+P – Progressive
+I – Incomplete
+
+Solution:
+SQL> create table Department_
+  2  (dno number(5) primary key,
+  3  dname varchar2(50) NOT NULL UNIQUE,
+  4  hod varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Department_;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DNO                                       NOT NULL NUMBER(5)
+ DNAME                                     NOT NULL VARCHAR2(50)
+ HOD                                       NOT NULL VARCHAR2(100)
+
+SQL> insert into Department_ values (10001,'Computer Science','Dr.Amol Mane');
+
+1 row created.
+
+SQL> insert into Department_ values (10002,'Information Technology','Dr.Ravi Desai');
+
+1 row created.
+
+SQL> insert into Department_ values (10003,'Mechanical Engineering','Dr.Rashmi Pandey');
+
+1 row created.
+
+SQL> insert into Department_ values (10004,'Electrical Engineering','Dr.Anupriya Sathe');
+
+1 row created.
+
+SQL> insert into Department_ values (10005,'Chemical Engineering','Dr.Vikas Mahandule');
+
+1 row created.
+
+SQL> select * from Department_;
+
+       DNO DNAME
+---------- --------------------------------------------------
+HOD
+--------------------------------------------------------------------------------
+     10001 Computer Science
+Dr.Amol Mane
+
+     10002 Information Technology
+Dr.Ravi Desai
+
+     10003 Mechanical Engineering
+Dr.Rashmi Pandey
+
+
+       DNO DNAME
+---------- --------------------------------------------------
+HOD
+--------------------------------------------------------------------------------
+     10004 Electrical Engineering
+Dr.Anupriya Sathe
+
+     10005 Chemical Engineering
+Dr.Vikas Mahandule
+
+SQL> create table Project
+  2  (pno number(3) primary key,
+  3  pname varchar(100) NOT NULL UNIQUE,
+  4  start_date date NOT NULL,
+  5  budget number(8) NOT NULL CHECK(budget>=0),
+  6  status char(1) DEFAULT 'I',
+  7  dno number(5) references Department_(dno));
+
+Table created.
+
+SQL> describe Project;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNO                                       NOT NULL NUMBER(3)
+ PNAME                                     NOT NULL VARCHAR2(100)
+ START_DATE                                NOT NULL DATE
+ BUDGET                                    NOT NULL NUMBER(8)
+ STATUS                                             CHAR(1)
+ DNO                                                NUMBER(5)
+
+SQL> insert into Project values(1,'Sentiment Analysis of Facebook Data',TO_DATE('2021-01-01','YYYY-MM-DD'),1500000,'P',10001);
+
+1 row created.
+
+SQL> insert into Project values(2,'Cancer Image Classification for Hospitals',TO_DATE('2021-02-15','YYYY-MM-DD'),500000,'I',10001);
+
+1 row created.
+
+SQL> insert into Project values(3,'IoT System Building for Fire Fighters',TO_DATE('2021-02-17','YYYY-MM-DD'),50000,'C',10001);
+
+1 row created.
+
+SQL> insert into Project values(4,'Machine Learning Course for School Students',TO_DATE('2021-03-01','YYYY-MM-DD'),0,'P',10002);
+
+1 row created.
+
+SQL> insert into Project values(5,'Progessive Web Application for Shop Keepers',TO_DATE('2021-01-01','YYYY-MM-DD'),25000,'P',10002);
+
+1 row created.
+
+SQL> insert into Project values(6,'Chatbot for BTech Admission',TO_DATE('2020-06-15','YYYY-MM-DD'),0,'C',10002);
+
+1 row created.
+
+SQL> insert into Project values(7,'Car Integrated System',TO_DATE('2020-05-01','YYYY-MM-DD'),150000,'I',10003);
+
+1 row created.
+
+SQL> insert into Project values(8,'Switch Board Project',TO_DATE('2020-09-17','YYYY-MM-DD'),0,'P',10004);
+
+1 row created.
+
+SQL> insert into Project values(9,'Organic Research Project',TO_DATE('2020-10-10','YYYY-MM-DD'),10000,'C',10005);
+
+1 row created.
+
+SQL> insert into Project values(10,'Inorganic Research Project',TO_DATE('2020-12-10','YYYY-MM-DD'),0,'I',10005);
+
+1 row created.
+
+SQL> select * from Project;
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S        DNO
+--------- ---------- - ----------
+         1
+Sentiment Analysis of Facebook Data
+01-JAN-21    1500000 P      10001
+
+         2
+Cancer Image Classification for Hospitals
+15-FEB-21     500000 I      10001
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S        DNO
+--------- ---------- - ----------
+
+         3
+IoT System Building for Fire Fighters
+17-FEB-21      50000 C      10001
+
+         4
+Machine Learning Course for School Students
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S        DNO
+--------- ---------- - ----------
+01-MAR-21          0 P      10002
+
+         5
+Progessive Web Application for Shop Keepers
+01-JAN-21      25000 P      10002
+
+         6
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S        DNO
+--------- ---------- - ----------
+Chatbot for BTech Admission
+15-JUN-20          0 C      10002
+
+         7
+Car Integrated System
+01-MAY-20     150000 I      10003
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S        DNO
+--------- ---------- - ----------
+         8
+Switch Board Project
+17-SEP-20          0 P      10004
+
+         9
+Organic Research Project
+10-OCT-20      10000 C      10005
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S        DNO
+--------- ---------- - ----------
+
+        10
+Inorganic Research Project
+10-DEC-20          0 I      10005
+
+
+10 rows selected.
+
+Q1. List the project name and department details worked in project that are ‘Complete’
+Sol:
+  2  from Project, Department_
+  3  where Department_.dno = Project.dno and Project.status='C';
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+DNAME
+--------------------------------------------------
+HOD
+--------------------------------------------------------------------------------
+         3
+IoT System Building for Fire Fighters
+Computer Science
+Dr.Amol Mane
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+DNAME
+--------------------------------------------------
+HOD
+--------------------------------------------------------------------------------
+         6
+Chatbot for BTech Admission
+Information Technology
+Dr.Ravi Desai
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+DNAME
+--------------------------------------------------
+HOD
+--------------------------------------------------------------------------------
+         9
+Organic Research Project
+Chemical Engineering
+Dr.Vikas Mahandule
+
+Q2. Display total budget of each department
+Sol:
+SQL> select Department_.dname as Department, sum(Project.budget) as Total_Budget
+  2  from Project, Department_
+  3  where Department_.dno = Project.dno
+  4  group by Department_.dname;
+
+DEPARTMENT                                         TOTAL_BUDGET
+-------------------------------------------------- ------------
+Chemical Engineering                                      10000
+Mechanical Engineering                                   150000
+Information Technology                                    25000
+Electrical Engineering                                        0
+Computer Science                                        2050000
+
+Q3. Display incomplete project of each department
+Sol:
+SQL> select Department_.dname, Project.pname
+  2  from Project, Department_
+  3  where Department_.dno = Project.dno
+  4  and Project.status='I';
+
+DNAME
+--------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Computer Science
+Cancer Image Classification for Hospitals
+
+Mechanical Engineering
+Car Integrated System
+
+Chemical Engineering
+Inorganic Research Project
+
+Q4. Find names of departments that have budget greater than 50000.
+Sol:
+SQL> select distinct(Department_.dname) as Department_Name
+  2  from Project,Department_
+  3  where Department_.dno=Project.dno and Project.budget>=50000;
+
+DEPARTMENT_NAME
+--------------------------------------------------
+Mechanical Engineering
+Computer Science
+
+Q5. Display All Project working under Mr Desai.
+Sol:
+SQL> select Project.pno, Project.pname, Project.start_date, Project.budget, Project.status
+  2  from Project, Department_
+  3  where Department_.dno = Project.dno and Department_.hod='Dr.Ravi Desai';
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S
+--------- ---------- -
+         4
+Machine Learning Course for School Students
+01-MAR-21          0 P
+
+         5
+Progessive Web Application for Shop Keepers
+01-JAN-21      25000 P
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+START_DAT     BUDGET S
+--------- ---------- -
+
+         6
+Chatbot for BTech Admission
+15-JUN-20          0 C
+
+SQL> commit;
+
+Commit complete.
