@@ -1,0 +1,335 @@
+Q6. Consider the following Entities and Relationship
+Property (pno, desc, area, rate)
+Owner(owner_no, owner_name, addr, phno)
+Relation between Owner and Property is One to Many
+Constraints: Primary Key, rate should be > 0.
+
+Solution:
+SQL> create table owner
+  2  (ono number(4) primary key,
+  3  oname varchar(100) NOT NULL,
+  4  address varchar2(100) NOT NULL,
+  5  phno number(10) NOT NULL);
+
+Table created.
+
+SQL> describe owner;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ONO                                       NOT NULL NUMBER(4)
+ ONAME                                     NOT NULL VARCHAR2(100)
+ ADDRESS                                   NOT NULL VARCHAR2(100)
+ PHNO                                      NOT NULL NUMBER(10)
+
+SQL> insert into owner values (101,'Mr.Patil','Dighi',9881783270);
+
+1 row created.
+
+SQL> insert into owner values (102,'Mr.Palande','Tingre Nagar',7709174195);
+
+1 row created.
+
+SQL> insert into owner values (103,'Mr.Roy','Nigdi',9665395718);
+
+1 row created.
+
+SQL> insert into owner values (104,'Mr.Gawas','Chinchwad',9850614076);
+
+1 row created.
+
+SQL> insert into owner values (105,'Mr.Kulkarni','Hinjewadi',9420204905);
+
+1 row created.
+
+SQL> select * from owner;
+
+       ONO
+----------
+ONAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+      PHNO
+----------
+       101
+Mr.Patil
+Dighi
+9881783270
+
+
+       ONO
+----------
+ONAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+      PHNO
+----------
+       102
+Mr.Palande
+Tingre Nagar
+7709174195
+
+
+       ONO
+----------
+ONAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+      PHNO
+----------
+       103
+Mr.Roy
+Nigdi
+9665395718
+
+
+       ONO
+----------
+ONAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+      PHNO
+----------
+       104
+Mr.Gawas
+Chinchwad
+9850614076
+
+
+       ONO
+----------
+ONAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+      PHNO
+----------
+       105
+Mr.Kulkarni
+Hinjewadi
+9420204905
+
+SQL> create table Property
+  2  (pno number(5) primary key,
+  3  descr varchar2(50) NOT NULL,
+  4  area number(3) NOT NULL check(area>0),
+  5  rate number(8) NOT NULL check(rate>0),
+  6  ono number(4) references owner);
+
+Table created.
+
+SQL> describe Property;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNO                                       NOT NULL NUMBER(5)
+ DESCR                                     NOT NULL VARCHAR2(50)
+ AREA                                      NOT NULL NUMBER(3)
+ RATE                                      NOT NULL NUMBER(8)
+ ONO                                                NUMBER(4)
+
+SQL> insert into Property values(1001,'Bunglow',350,1500000,103);
+
+1 row created.
+
+SQL> insert into Property values(1002,'NA-Plot',150,50000,105);
+
+1 row created.
+
+SQL> insert into Property values(1003,'Villa',990,15000000,105);
+
+1 row created.
+
+SQL> insert into Property values(1004,'2-Bhk Flat',450,5500000,101);
+
+1 row created.
+
+SQL> insert into Property values(1005,'Row-House',250,7500000,102);
+
+1 row created.
+
+SQL> insert into Property values(1006,'NA-Plot',200,100000,104);
+
+1 row created.
+
+SQL> insert into Property values(1007,'1-BHK Sea Flat',650,7700000,101);
+
+1 row created.
+
+SQL> insert into Property values(1008,'Boat-Club',450,3750000,103);
+
+1 row created.
+
+SQL> insert into Property values(1009,'Teddy-Pub',950,9900000,102);
+
+1 row created.
+
+SQL> insert into Property values(1010,'Row-House',450,8900000,104);
+
+1 row created.
+
+SQL> select * from Property;
+
+       PNO DESCR                                                    AREA
+---------- -------------------------------------------------- ----------
+      RATE        ONO
+---------- ----------
+      1001 Bunglow                                                   350
+   1500000        103
+
+      1002 NA-Plot                                                   150
+     50000        105
+
+      1003 Villa                                                     990
+  15000000        105
+
+
+       PNO DESCR                                                    AREA
+---------- -------------------------------------------------- ----------
+      RATE        ONO
+---------- ----------
+      1004 2-Bhk Flat                                                450
+   5500000        101
+
+      1005 Row-House                                                 250
+   7500000        102
+
+      1006 NA-Plot                                                   200
+    100000        104
+
+
+       PNO DESCR                                                    AREA
+---------- -------------------------------------------------- ----------
+      RATE        ONO
+---------- ----------
+      1007 1-BHK Sea Flat                                            650
+   7700000        101
+
+      1008 Boat-Club                                                 450
+   3750000        103
+
+      1009 Teddy-Pub                                                 950
+   9900000        102
+
+
+       PNO DESCR                                                    AREA
+---------- -------------------------------------------------- ----------
+      RATE        ONO
+---------- ----------
+      1010 Row-House                                                 450
+   8900000        104
+
+Q1. Display area wise property details.
+Sol:
+SQL> select Property.descr, Property.area, Property.rate
+  2  from Property
+  3  order by Property.area asc;
+
+DESCR                                                    AREA       RATE
+-------------------------------------------------- ---------- ----------
+NA-Plot                                                   150      50000
+NA-Plot                                                   200     100000
+Row-House                                                 250    7500000
+Bunglow                                                   350    1500000
+2-Bhk Flat                                                450    5500000
+Row-House                                                 450    8900000
+Boat-Club                                                 450    3750000
+1-BHK Sea Flat                                            650    7700000
+Teddy-Pub                                                 950    9900000
+Villa                                                     990   15000000
+
+10 rows selected.
+
+Q2. Display Property Owned by Mr.Patil having minimum rate
+Sol:
+SQL> select Owner.ono, Owner.oname, Property.descr, Property.area, Property.rate
+  2  from Owner, Property
+  3  where Owner.ono=Property.ono and Owner.oname='Mr.Patil'
+  4  and Property.rate = (select min(Property.rate) from Owner,Property where Owner.ono = Property.ono
+  5  and Owner.oname='Mr.Patil');
+
+       ONO
+----------
+ONAME
+--------------------------------------------------------------------------------
+DESCR                                                    AREA       RATE
+-------------------------------------------------- ---------- ----------
+       101
+Mr.Patil
+2-Bhk Flat                                                450    5500000
+
+Q3. Display all properties with Owner name that having highest rate of properties located in Chinchwad area
+Sol:
+SQL> select Owner.oname, Property.descr, Property.rate
+  2  from Owner, Property
+  3  where Owner.ono = Property.ono
+  4  and Property.rate = (select max(Property.rate) from Owner, Property where Owner.ono = Property.ono
+  5  and Owner.address='Chinchwad');
+
+ONAME
+--------------------------------------------------------------------------------
+DESCR                                                    RATE
+-------------------------------------------------- ----------
+Mr.Gawas
+Row-House                                             8900000
+
+Q4. Display owner wise property details.
+Sol:
+SQL> select Owner.oname, Property.descr, Property.rate
+  2  from Owner, Property
+  3  where Owner.ono = Property.ono
+  4  order by Owner.oname;
+
+ONAME
+--------------------------------------------------------------------------------
+DESCR                                                    RATE
+-------------------------------------------------- ----------
+Mr.Gawas
+NA-Plot                                                100000
+
+Mr.Gawas
+Row-House                                             8900000
+
+Mr.Kulkarni
+NA-Plot                                                 50000
+
+
+ONAME
+--------------------------------------------------------------------------------
+DESCR                                                    RATE
+-------------------------------------------------- ----------
+Mr.Kulkarni
+Villa                                                15000000
+
+Mr.Palande
+Row-House                                             7500000
+
+Mr.Palande
+Teddy-Pub                                             9900000
+
+
+ONAME
+--------------------------------------------------------------------------------
+DESCR                                                    RATE
+-------------------------------------------------- ----------
+Mr.Patil
+1-BHK Sea Flat                                        7700000
+
+Mr.Patil
+2-Bhk Flat                                            5500000
+
+Mr.Roy
+Boat-Club                                             3750000
+
+
+ONAME
+--------------------------------------------------------------------------------
+DESCR                                                    RATE
+-------------------------------------------------- ----------
+Mr.Roy
+Bunglow                                               1500000
+
+
+10 rows selected.
