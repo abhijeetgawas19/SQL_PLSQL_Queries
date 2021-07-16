@@ -4,6 +4,7 @@ Owner(owner_no, owner_name, addr, phno)
 Relation between Owner and Property is One to Many
 Constraints: Primary Key, rate should be > 0.
 
+
 Solution:
 SQL> create table owner
   2  (ono number(4) primary key,
