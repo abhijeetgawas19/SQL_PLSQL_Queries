@@ -1,0 +1,415 @@
+Q9. Consider the following Entities and Relationship
+Musician (mno,mname,addr,phone)
+Album(title,copy_right,date,format)
+Relation between Musician and Album is One to Many.
+Constraints: Primary Key.
+Sol:
+SQL> create table Musician
+  2  (mno number(5) primary key,
+  3  mname varchar2(100) NOT NULL,
+  4  addr varchar2(100) NOT NULL,
+  5  phone number(10) NOT NULL);
+
+Table created.
+
+SQL> describe Musician;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MNO                                       NOT NULL NUMBER(5)
+ MNAME                                     NOT NULL VARCHAR2(100)
+ ADDR                                      NOT NULL VARCHAR2(100)
+ PHONE                                     NOT NULL NUMBER(10)
+
+SQL> insert into Musician values (1,'Sonu Nigham','Mumbai',9881783270);
+
+1 row created.
+
+SQL> insert into Musician values (2,'Amaal Malik','Pune',7709174195);
+
+1 row created.
+
+SQL> insert into Musician values (3,'A R Rehman','Surat',9420204905);
+
+1 row created.
+
+SQL> insert into Musician values (4,'Sukwinder Singh','Patiala',9665395718);
+
+1 row created.
+
+SQL> insert into Musician values (5,'Arijit Singh','Kharagpur',9423237858);
+
+1 row created.
+
+SQL> select * from Musician;
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+     PHONE
+----------
+         1
+Sonu Nigham
+Mumbai
+9881783270
+
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+     PHONE
+----------
+         2
+Amaal Malik
+Pune
+7709174195
+
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+     PHONE
+----------
+         3
+A R Rehman
+Surat
+9420204905
+
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+     PHONE
+----------
+         4
+Sukwinder Singh
+Patiala
+9665395718
+
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+     PHONE
+----------
+         5
+Arijit Singh
+Kharagpur
+9423237858
+
+SQL> create table Album
+  2  (ano number(5) primary key,
+  3  title varchar2(100) NOT NULL,
+  4  copy_date date NOT NULL,
+  5  format varchar2(100) NOT NULL,
+  6  mno number(5) references Musician(mno));
+
+Table created.
+
+SQL> describe Album;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ANO                                       NOT NULL NUMBER(5)
+ TITLE                                     NOT NULL VARCHAR2(100)
+ COPY_DATE                                 NOT NULL DATE
+ FORMAT                                    NOT NULL VARCHAR2(100)
+ MNO                                                NUMBER(5)
+
+SQL> insert into Album values(101,'Chale Aana','27-MAR-2016','Audio',2);
+
+1 row created.
+
+SQL> insert into Album values(102,'Dil Mein Ho Tum','17-DEC-2016','Video',2);
+
+1 row created.
+
+SQL> insert into Album values(103,'Tum Hi Ho','21-MAY-2017','Audio',5);
+
+1 row created.
+
+SQL> insert into Album values(104,'Kal Ho Na Ho','14-JAN-2010','Video',1);
+
+1 row created.
+
+SQL> insert into Album values(105,'Haye Mirche','19-DEC-2008','Audio',4);
+
+1 row created.
+
+SQL> insert into Album values(106,'Khawaja Mere Khawja','21-Feb-2017','Video',3);
+
+1 row created.
+
+SQL> select * from Album;
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+       101
+Chale Aana
+27-MAR-16
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+Audio
+         2
+
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+       102
+Dil Mein Ho Tum
+17-DEC-16
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+Video
+         2
+
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+       103
+Tum Hi Ho
+21-MAY-17
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+Audio
+         5
+
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+       104
+Kal Ho Na Ho
+14-JAN-10
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+Video
+         1
+
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+       105
+Haye Mirche
+19-DEC-08
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+Audio
+         4
+
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+       106
+Khawaja Mere Khawja
+21-FEB-17
+
+       ANO
+----------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+FORMAT
+--------------------------------------------------------------------------------
+       MNO
+----------
+Video
+         3
+
+
+6 rows selected.
+
+Q1. Display all Albums composed by ‘A R Rehman’.
+Sol:
+SQL> select Musician.mname, Album.title, Album.copy_date
+  2  from Musician, Album
+  3  where Musician.mno = Album.mno
+  4  and Musician.mname='A R Rehman';
+
+MNAME
+--------------------------------------------------------------------------------
+TITLE
+--------------------------------------------------------------------------------
+COPY_DATE
+---------
+A R Rehman
+Khawaja Mere Khawja
+21-FEB-17
+
+Q2. Display musician details who have composed Audio Albums.
+Sol:
+SQL> select Musician.mname, Album.title
+  2  from Musician, Album
+  3  where Musician.mno = Album.mno
+  4  and Album.format='Audio';
+
+MNAME
+--------------------------------------------------------------------------------
+TITLE
+--------------------------------------------------------------------------------
+Amaal Malik
+Chale Aana
+
+Sukwinder Singh
+Haye Mirche
+
+Arijit Singh
+Tum Hi Ho
+
+Q3. Display musician wise album details.
+Sol:
+SQL> select Musician.mname, Album.title
+  2  from Musician, Album
+  3  where Musician.mno = Album.mno
+  4  order by Musician.mname;
+
+MNAME
+--------------------------------------------------------------------------------
+TITLE
+--------------------------------------------------------------------------------
+A R Rehman
+Khawaja Mere Khawja
+
+Amaal Malik
+Chale Aana
+
+Amaal Malik
+Dil Mein Ho Tum
+
+
+MNAME
+--------------------------------------------------------------------------------
+TITLE
+--------------------------------------------------------------------------------
+Arijit Singh
+Tum Hi Ho
+
+Sonu Nigham
+Kal Ho Na Ho
+
+Sukwinder Singh
+Haye Mirche
+
+Q4. Display the Musician details from Pune
+Sol:
+SQL> select * from Musician
+  2  where Musician.addr = 'Pune';
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+     PHONE
+----------
+         2
+Amaal Malik
+Pune
+7709174195
