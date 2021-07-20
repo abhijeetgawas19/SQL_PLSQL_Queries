@@ -1,0 +1,365 @@
+Q7. Consider the following Entities and Relationship
+Employee (emp_no,emp_name,emp_rate)
+Position (positing_no, skill)
+Relationship between Employee and Position is Many-to-Many with day and shift as descriptive attribute.
+Sol:
+SQL> create table Employee
+  2  (emp_no number(5) primary key,
+  3  emp_name varchar2(100) NOT NULL,
+  4  payrate number(4) NOT NULL check(payrate>0));
+
+Table created.
+
+SQL> describe Employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_NO                                    NOT NULL NUMBER(5)
+ EMP_NAME                                  NOT NULL VARCHAR2(100)
+ PAYRATE                                   NOT NULL NUMBER(4)
+
+SQL> insert into Employee values (1,'Rahul',500);
+
+1 row created.
+
+SQL> insert into Employee values (2,'Manoj',400);
+
+1 row created.
+
+SQL> insert into Employee values (3,'Ravi',350);
+
+1 row created.
+
+SQL> insert into Employee values (4,'Ram',200);
+
+1 row created.
+
+SQL> insert into Employee values (5,'Baburao',250);
+
+1 row created.
+
+SQL> select * from Employee;
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+   PAYRATE
+----------
+         1
+Rahul
+       500
+
+         2
+Manoj
+       400
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+   PAYRATE
+----------
+
+         3
+Ravi
+       350
+
+         4
+Ram
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+   PAYRATE
+----------
+       200
+
+         5
+Baburao
+       250
+
+SQL> create table Position
+  2  (pos_no number(3) primary key,
+  3  skill varchar2(50) NOT NULL,
+  4  emp_no number(5) references Employee);
+
+Table created.
+
+SQL> describe Position;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ POS_NO                                    NOT NULL NUMBER(3)
+ SKILL                                     NOT NULL VARCHAR2(50)
+ EMP_NO                                             NUMBER(5)
+
+ SQL> insert into Position values (101, 'Waiter', 2);
+
+1 row created.
+
+SQL> insert into Position values (201, 'Driver', 3);
+
+1 row created.
+
+SQL> insert into Position values (301, 'Chef', 1);
+
+1 row created.
+
+SQL> insert into Position values (401, 'Cleaner', 4);
+
+1 row created.
+
+SQL> insert into Position values (501, 'Chef', 5);
+
+1 row created.
+
+SQL> insert into Position values (601, 'Sweeper', 3);
+
+1 row created.
+
+SQL> insert into Position values (701, 'Decorator', 2);
+
+1 row created.
+
+SQL> insert into Position values (801, 'Mechanic', 1);
+
+1 row created.
+
+SQL> insert into Position values (901, 'Sweeper', 4);
+
+1 row created.
+
+SQL> insert into Position values (902, 'Waiter', 5);
+
+1 row created.
+
+SQL> select * from Position;
+
+    POS_NO SKILL                                                  EMP_NO
+---------- -------------------------------------------------- ----------
+       101 Waiter                                                      2
+       201 Driver                                                      3
+       301 Chef                                                        1
+       401 Cleaner                                                     4
+       501 Chef                                                        5
+       601 Sweeper                                                     3
+       701 Decorator                                                   2
+       801 Mechanic                                                    1
+       901 Sweeper                                                     4
+       902 Waiter                                                      5
+
+10 rows selected.
+
+SQL> create table Employee_Position_Duty
+  2  (emp_no number(5) references Employee,
+  3  pos_no number(3) references Position,
+  4  day varchar2(20) NOT NULL,
+  5  shift varchar2(20) NOT NULL);
+
+Table created.
+
+SQL> describe Employee_Position_Duty;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_NO                                             NUMBER(5)
+ POS_NO                                             NUMBER(3)
+ DAY                                       NOT NULL VARCHAR2(20)
+ SHIFT                                     NOT NULL VARCHAR2(20)
+
+SQL> insert into Employee_Position_Duty values (1,301,'Monday','Morning');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (1,801,'Monday','Night');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (2,101,'Tuesday','Morning');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (2,701,'Tuesday','Night');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (3,201,'Wednesday','Morning');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (3,601,'Wednesday','Night');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (4,401,'Thrusday','Morning');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (4,901,'Thrusday','Night');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (5,501,'Friday','Morning');
+
+1 row created.
+
+SQL> insert into Employee_Position_Duty values (5,902,'Friday','Night');
+
+1 row created.
+
+SQL> select * from Employee_Position_Duty;
+
+    EMP_NO     POS_NO DAY                  SHIFT
+---------- ---------- -------------------- --------------------
+         1        301 Monday               Morning
+         1        801 Monday               Night
+         2        101 Tuesday              Morning
+         2        701 Tuesday              Night
+         3        201 Wednesday            Morning
+         3        601 Wednesday            Night
+         4        401 Thrusday             Morning
+         4        901 Thrusday             Night
+         5        501 Friday               Morning
+         5        902 Friday               Night
+
+10 rows selected.
+
+Q1. Find the names and rate of pay all employee who allocated a duty today.
+Sol:
+SQL> select Employee.emp_name, Employee.payrate, Position.skill
+  2  from Employee, Position, Employee_Position_Duty
+  3  where Employee.emp_no = Employee_Position_Duty.emp_no and Position.pos_no = Employee_Position_Duty.pos_no and
+  4  Employee_Position_Duty.day = 'Friday';
+
+EMP_NAME
+--------------------------------------------------------------------------------
+   PAYRATE SKILL
+---------- --------------------------------------------------
+Baburao
+       250 Chef
+
+Baburao
+       250 Waiter
+
+Q2. Give employee number who are working at position_no 201, but don’t have the skills of waiter.
+Sol:
+SQL> select Employee.emp_no, Employee.emp_name
+  2  from Employee, Position
+  3  where Employee.emp_no = Position.emp_no
+  4  and Position.pos_no = 201 and Position.skill not in ('Waiter');
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+         3
+Ravi
+
+Q3. Display a list of names of employees who have skill as chef and who has assigned duty today.
+Sol:
+SQL> select Employee.emp_name
+  2  from Employee, Position, Employee_Position_Duty
+  3  where Employee.emp_no = Employee_Position_Duty.emp_no and Position.pos_no = Employee_Position_Duty.pos_no
+  4  and Position.skill = 'Chef' and Employee_Position_Duty.day = 'Friday';
+
+EMP_NAME
+--------------------------------------------------------------------------------
+Baburao
+
+Q4. Display the emp_no and emp_name for all employees who are working on Tuesday and at least one other day.
+Sol:
+SQL> select Employee.emp_no, Employee.emp_name
+  2  from Employee, Employee_Position_Duty
+  3  where Employee.emp_no = Employee_Position_Duty.emp_no and
+  4  Employee_Position_Duty.day = 'Tuesday' and Employee_Position_Duty.day in ('Monday','Wednesday','Thrusday','Friday');
+
+no rows selected
+Q5. Display Shift wise Employee Details
+Sol:
+SQL> select Employee.emp_no, Employee.emp_name, Position.skill
+  2  from Employee, Position, Employee_Position_Duty
+  3  where Employee.emp_no = Employee_Position_Duty.emp_no and Position.pos_no = Employee_Position_Duty.pos_no
+  4  order by Employee_Position_Duty.shift;
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+SKILL
+--------------------------------------------------
+         2
+Manoj
+Waiter
+
+         3
+Ravi
+Driver
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+SKILL
+--------------------------------------------------
+
+         1
+Rahul
+Chef
+
+         4
+Ram
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+SKILL
+--------------------------------------------------
+Cleaner
+
+         5
+Baburao
+Chef
+
+         3
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+SKILL
+--------------------------------------------------
+Ravi
+Sweeper
+
+         2
+Manoj
+Decorator
+
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+SKILL
+--------------------------------------------------
+         1
+Rahul
+Mechanic
+
+         4
+Ram
+Sweeper
+
+    EMP_NO
+----------
+EMP_NAME
+--------------------------------------------------------------------------------
+SKILL
+--------------------------------------------------
+
+         5
+Baburao
+Waiter
+
+
+10 rows selected.
