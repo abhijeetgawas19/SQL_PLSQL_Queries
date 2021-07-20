@@ -1,0 +1,234 @@
+Q10. Consider the following Entities and Relationship
+Sailor (sid,sname,age)
+Boat (bid,bname,color)
+Relation between Sailor and Boat is Many to Many with day as descriptive attributes
+Constraints: Primary key, age>0
+Sol:
+
+SQL> create table Sailor
+  2  (sid number(4) primary key,
+  3  sname varchar2(50) NOT NULL,
+  4  age number(2) NOT NULL CHECK(age>0));
+
+Table created.
+
+SQL> describe Sailor;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SID                                       NOT NULL NUMBER(4)
+ SNAME                                     NOT NULL VARCHAR2(50)
+ AGE                                       NOT NULL NUMBER(2)
+
+SQL> insert into Sailor values(1,'Krishna Thakur',32);
+
+1 row created.
+
+SQL> insert into Sailor values(2,'Vitthal Rane',47);
+
+1 row created.
+
+SQL> insert into Sailor values(3,'Parshuram Thorat',35);
+
+1 row created.
+
+SQL> insert into Sailor values(4,'Pandurang Kulkarni',41);
+
+1 row created.
+
+SQL> insert into Sailor values(5,'Bajrang Mane',50);
+
+1 row created.
+
+SQL> select * from Sailor;
+
+       SID SNAME                                                     AGE
+---------- -------------------------------------------------- ----------
+         1 Krishna Thakur                                             32
+         2 Vitthal Rane                                               47
+         3 Parshuram Thorat                                           35
+         4 Pandurang Kulkarni                                         41
+         5 Bajrang Mane                                               50
+
+SQL> create table Boat
+  2  (bid number(4) primary key,
+  3  bname varchar2(50) NOT NULL,
+  4  color varchar2(30) NOT NULL,
+  5  sid number(4) references Sailor(sid));
+
+Table created.
+
+SQL> describe Boat;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BID                                       NOT NULL NUMBER(4)
+ BNAME                                     NOT NULL VARCHAR2(50)
+ COLOR                                     NOT NULL VARCHAR2(30)
+ SID                                                NUMBER(4)
+
+SQL> insert into Boat values(101,'Codfather','Red',2);
+
+1 row created.
+
+SQL> insert into Boat values(102,'Error 404','Blue',2);
+
+1 row created.
+
+SQL> insert into Boat values(103,'Unsinkable','Green',1);
+
+1 row created.
+
+SQL> insert into Boat values(104,'Inheritance','Golden',3);
+
+1 row created.
+
+SQL> insert into Boat values(105,'Baby Got Bass','Brown',5);
+
+1 row created.
+
+SQL> insert into Boat values(106,'Baroness','White',4);
+
+1 row created.
+
+SQL> select * from Boat;
+
+       BID BNAME
+---------- --------------------------------------------------
+COLOR                                 SID
+------------------------------ ----------
+       101 Codfather
+Red                                     2
+
+       102 Error 404
+Blue                                    2
+
+       103 Unsinkable
+Green                                   1
+
+
+       BID BNAME
+---------- --------------------------------------------------
+COLOR                                 SID
+------------------------------ ----------
+       104 Inheritance
+Golden                                  3
+
+       105 Baby Got Bass
+Brown                                   5
+
+       106 Baroness
+White                                   4
+
+
+6 rows selected.
+
+SQL> create table Sailor_Boat
+  2  (sid number(4) references Sailor(sid),
+  3  bid number(4) references Boat(bid),
+  4  day varchar2(40) NOT NULL);
+
+Table created.
+
+SQL> describe Sailor_Boat;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SID                                                NUMBER(4)
+ BID                                                NUMBER(4)
+ DAY                                       NOT NULL VARCHAR2(40)
+
+SQL> insert into Sailor_Boat values(1,103,'Sunday');
+
+1 row created.
+
+SQL> insert into Sailor_Boat values(2,101,'Monday');
+
+1 row created.
+
+SQL> insert into Sailor_Boat values(2,102,'Tuesday');
+
+1 row created.
+
+SQL> insert into Sailor_Boat values(1,103,'Wednesday');
+
+1 row created.
+
+SQL> insert into Sailor_Boat values(3,104,'Thrusday');
+
+1 row created.
+
+SQL> insert into Sailor_Boat values(4,106,'Friday');
+
+1 row created.
+
+SQL> insert into Sailor_Boat values(5,105,'Saturday');
+
+1 row created.
+
+SQL> insert into Sailor_Boat values(2,101,'Friday');
+
+1 row created.
+
+SQL> select * from Sailor_Boat;
+
+       SID        BID DAY
+---------- ---------- ----------------------------------------
+         1        103 Sunday
+         2        101 Monday
+         2        102 Tuesday
+         1        103 Wednesday
+         3        104 Thrusday
+         4        106 Friday
+         5        105 Saturday
+         2        101 Friday
+
+8 rows selected.
+
+Q1. Display details of all boats sailed by sailor ‘Vittal’
+Sol:
+SQL> select Boat.bid, Boat.bname, Boat.color
+  2  from Sailor,Boat
+  3  where Sailor.sid = Boat.sid
+  4  and Sailor.sname = 'Vitthal Rane';
+
+       BID BNAME
+---------- --------------------------------------------------
+COLOR
+------------------------------
+       101 Codfather
+Red
+
+       102 Error 404
+Blue
+
+Q2. Display Sailor names working on blue boat
+Sol:
+SQL> select Sailor.sname
+  2  from Sailor, Boat
+  3  where Sailor.sid = Boat.sid
+  4  and Boat.color = 'Blue';
+
+SNAME
+--------------------------------------------------
+Vitthal Rane
+
+Q3. Find the name of sailor who sailed the boat both on Tuesday and Friday
+Sol:
+SQL> select Sailor.sname
+  2  from Sailor,Boat,Sailor_Boat
+  3  where Sailor.sid = Sailor_Boat.sid and Boat.bid = Sailor_Boat.bid
+  4  and Sailor_Boat.day = 'Monday' and Sailor_Boat.day = 'Friday';
+
+no rows selected
+
+Q4. Display details of the boats which is sailed maximum times on Sundays.
+Sol:
+SQL> select Boat.bname, Boat.color
+  2  from Boat,Sailor_Boat
+  3  where Boat.bid = Sailor_Boat.bid
+  4  and Sailor_Boat.day = 'Sunday';
+
+BNAME
+--------------------------------------------------
+COLOR
+------------------------------
+Unsinkable
+Green
