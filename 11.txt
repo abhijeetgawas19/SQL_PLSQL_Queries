@@ -1,0 +1,469 @@
+Q11. Consider the following Entities and Relationship
+Supplier(sid,sname,addr)
+Parts(pid,pname,pdesc)
+Relation between Supplier and Parts is Many to Many with cost as descriptive attribute
+Constraints: Primary key, cost > 0
+
+Sol:
+SQL> create table Supplier
+  2  (sid number(5) primary key,
+  3  sname varchar2(50) NOT NULL,
+  4  addr varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Supplier;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SID                                       NOT NULL NUMBER(5)
+ SNAME                                     NOT NULL VARCHAR2(50)
+ ADDR                                      NOT NULL VARCHAR2(100)
+
+SQL> insert into Supplier values(1,'Amit Patil','Mumbai');
+
+1 row created.
+
+SQL> insert into Supplier values(2,'Rahul Pawar','Pune');
+
+1 row created.
+
+SQL> insert into Supplier values(3,'Shyam Goswami','Satara');
+
+1 row created.
+
+SQL> insert into Supplier values(4,'Baburao Apte','Sangli');
+
+1 row created.
+
+SQL> insert into Supplier values(5,'Manoj Bhosale','Kolhapur');
+
+1 row created.
+
+SQL> select * from Supplier;
+
+       SID SNAME
+---------- --------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+         1 Amit Patil
+Mumbai
+
+         2 Rahul Pawar
+Pune
+
+         3 Shyam Goswami
+Satara
+
+
+       SID SNAME
+---------- --------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+         4 Baburao Apte
+Sangli
+
+         5 Manoj Bhosale
+Kolhapur
+
+SQL> create table Parts
+  2  (pid number(5) primary key,
+  3  pname varchar2(50) NOT NULL,
+  4  pdesc varchar2(100) NOT NULL,
+  5  sid number(5) references Supplier(sid));
+
+Table created.
+
+SQL> describe Parts;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PID                                       NOT NULL NUMBER(5)
+ PNAME                                     NOT NULL VARCHAR2(50)
+ PDESC                                     NOT NULL VARCHAR2(100)
+ SID                                                NUMBER(5)
+
+SQL> insert into Parts values (101,'Spark Plug','Durable',1);
+
+1 row created.
+
+SQL> insert into Parts values (102,'Wind Screen','Italian Glass',1);
+
+1 row created.
+
+SQL> insert into Parts values (103,'Tyres','Maximum Grip',2);
+
+1 row created.
+
+SQL> insert into Parts values (104,'Music System','JBL Branding',2);
+
+1 row created.
+
+SQL> insert into Parts values (105,'Steering Covers','Matte Finish',3);
+
+1 row created.
+
+SQL> insert into Parts values (106,'Vehicle Cover','Premium Raincover',3);
+
+1 row created.
+
+SQL> insert into Parts values (107,'Gearbox design set','Golden Lining',4);
+
+1 row created.
+
+SQL> insert into Parts values (108,'Focus Lighting','Italian Lights',4);
+
+1 row created.
+
+SQL> insert into Parts values (109,'Black Backscreen','German Glass',5);
+
+1 row created.
+
+SQL> insert into Parts values (110,'Wiper','Indian Fibre',5);
+
+1 row created.
+
+SQL> select * from Parts;
+
+       PID PNAME
+---------- --------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+       SID
+----------
+       101 Spark Plug
+Durable
+         1
+
+       102 Wind Screen
+Italian Glass
+         1
+
+       PID PNAME
+---------- --------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+       SID
+----------
+
+       103 Tyres
+Maximum Grip
+         2
+
+       104 Music System
+JBL Branding
+
+       PID PNAME
+---------- --------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+       SID
+----------
+         2
+
+       105 Steering Covers
+Matte Finish
+         3
+
+       106 Vehicle Cover
+
+       PID PNAME
+---------- --------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+       SID
+----------
+Premium Raincover
+         3
+
+       107 Gearbox design set
+Golden Lining
+         4
+
+
+       PID PNAME
+---------- --------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+       SID
+----------
+       108 Focus Lighting
+Italian Lights
+         4
+
+       109 Black Backscreen
+German Glass
+         5
+
+       PID PNAME
+---------- --------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+       SID
+----------
+
+       110 Wiper
+Indian Fibre
+         5
+
+
+10 rows selected.
+
+SQL> create table Supplier_Parts
+  2  (sid number(5) references Supplier(sid),
+  3  pid number(5) references Parts(pid),
+  4  cost number(8) NOT NULL CHECK(cost>0));
+
+Table created.
+
+SQL> describe Supplier_Parts;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ SID                                                NUMBER(5)
+ PID                                                NUMBER(5)
+ COST                                      NOT NULL NUMBER(8)
+
+SQL> insert into Supplier_Parts values(1,101,25000);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(1,102,45000);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(2,103,15000);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(2,104,55000);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(3,105,5000);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(3,106,2500);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(4,107,7500);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(4,108,35000);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(5,109,45000);
+
+1 row created.
+
+SQL> insert into Supplier_Parts values(5,110,950);
+
+1 row created.
+
+SQL> select * from Supplier_Parts;
+
+       SID        PID       COST
+---------- ---------- ----------
+         1        101      25000
+         1        102      45000
+         2        103      15000
+         2        104      55000
+         3        105       5000
+         3        106       2500
+         4        107       7500
+         4        108      35000
+         5        109      45000
+         5        110        950
+
+10 rows selected.
+
+Q1. Display the supplier details from Mumbai.
+Sol:
+SQL> select * from Supplier where addr = 'Mumbai';
+
+       SID SNAME
+---------- --------------------------------------------------
+ADDR
+--------------------------------------------------------------------------------
+         1 Amit Patil
+Mumbai
+
+Q2. Update the cost by 25% for all parts supplied by supplier ‘Rahul Pawar’.
+Sol:
+SQL> select Parts.pname, Parts.pdesc, Supplier_Parts.cost
+  2  from Supplier,Parts,Supplier_Parts
+  3  where Supplier.sid = Supplier_Parts.sid and Parts.pid = Supplier_Parts.pid
+  4  and Supplier.sname='Rahul Pawar';
+
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+      COST
+----------
+Tyres
+Maximum Grip
+     15000
+
+Music System
+JBL Branding
+     55000
+
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+      COST
+----------
+
+SQL> update
+  2  (select Supplier_Parts.cost
+  3  from Supplier,Parts,Supplier_Parts
+  4  where Supplier.sid = Supplier_Parts.sid
+  5  and Parts.pid = Supplier_Parts.pid
+  6  and Supplier.sname = 'Rahul Pawar') pp
+  7  set pp.cost = pp.cost + pp.cost * 0.25;
+
+SQL> select Parts.pname, Parts.pdesc, Supplier_Parts.cost
+  2  from Supplier,Parts,Supplier_Parts
+  3  where Supplier.sid = Supplier_Parts.sid and Parts.pid = Supplier_Parts.pid
+  4  and Supplier.sname='Rahul Pawar';
+
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+      COST
+----------
+Tyres
+Maximum Grip
+     18750
+
+Music System
+JBL Branding
+     68750
+
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+      COST
+----------
+
+Q3. Display all parts supplied by each supplier.
+Sol:
+SQL> select Supplier.sname, Parts.pname, Parts.pdesc
+  2  from Supplier,Parts
+  3  where Supplier.sid = Parts.sid;
+
+SNAME
+--------------------------------------------------
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+Amit Patil
+Spark Plug
+Durable
+
+Amit Patil
+Wind Screen
+Italian Glass
+
+SNAME
+--------------------------------------------------
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+
+Rahul Pawar
+Tyres
+Maximum Grip
+
+Rahul Pawar
+Music System
+
+SNAME
+--------------------------------------------------
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+JBL Branding
+
+Shyam Goswami
+Steering Covers
+Matte Finish
+
+Shyam Goswami
+
+SNAME
+--------------------------------------------------
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+Vehicle Cover
+Premium Raincover
+
+Baburao Apte
+Gearbox design set
+Golden Lining
+
+
+SNAME
+--------------------------------------------------
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+Baburao Apte
+Focus Lighting
+Italian Lights
+
+Manoj Bhosale
+Black Backscreen
+German Glass
+
+SNAME
+--------------------------------------------------
+PNAME
+--------------------------------------------------
+PDESC
+--------------------------------------------------------------------------------
+
+Manoj Bhosale
+Wiper
+Indian Fibre
+
+
+10 rows selected.
+
+Q4. Display details of parts which are supplied at maximum price by each supplier.
+Sol:
+SQL> select Supplier.sname, max(Supplier_Parts.cost)
+  2  from Supplier,Supplier_Parts
+  3  where Supplier.sid = Supplier_Parts.sid
+  4  group by Supplier.sname;
+
+SNAME                                              MAX(SUPPLIER_PARTS.COST)
+-------------------------------------------------- ------------------------
+Amit Patil                                                            45000
+Manoj Bhosale                                                         45000
+Shyam Goswami                                                          5000
+Rahul Pawar                                                           68750
+Baburao Apte                                                          35000
+
+Q5. Display all suppliers who supply part ‘Music System’ and display its cost
+Sol:
+SQL> select Supplier.sname, Supplier_Parts.cost
+  2  from Supplier,Parts,Supplier_Parts
+  3  where Supplier.sid = Supplier_Parts.sid and Parts.pid = Supplier_Parts.pid
+  4  and Parts.pname = 'Music System';
+
+SNAME                                                    COST
+-------------------------------------------------- ----------
+Rahul Pawar                                             68750
+
