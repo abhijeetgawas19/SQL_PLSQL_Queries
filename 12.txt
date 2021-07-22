@@ -1,0 +1,379 @@
+Q12. Consider the following Entities and Relationship
+Medical (mno,mname,city,phone)
+Drug (dno,dname,dtype,company,price)
+Relation between Medical and Drug is Many to Many with descriptive attribute is quantity.
+Sol:
+SQL> create table Medical
+  2  (mno number(5) primary key,
+  3  mname varchar2(100) NOT NULL,
+  4  city varchar2(50) NOT NULL,
+  5  phone number(10) NOT NULL UNIQUE);
+
+Table created.
+
+SQL> describe Medical;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MNO                                       NOT NULL NUMBER(5)
+ MNAME                                     NOT NULL VARCHAR2(100)
+ CITY                                      NOT NULL VARCHAR2(50)
+ PHONE                                     NOT NULL NUMBER(10)
+
+SQL> insert into Medical values(1,'Sai Medical','Pimpri-Chinchwad',9881783270);
+
+1 row created.
+
+SQL> insert into Medical values(2,'Dighi Generic Store','Pune',7709174195);
+
+1 row created.
+
+SQL> insert into Medical values(3,'Med Plus','Kolhapur',9423237858);
+
+1 row created.
+
+SQL> insert into Medical values(4,'Pharm Easy','Solapur',9850614076);
+
+1 row created.
+
+SQL> insert into Medical values(5,'Easy Life','Nagar',9420204905);
+
+1 row created.
+
+SQL> select * from Medical;
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+CITY                                                    PHONE
+-------------------------------------------------- ----------
+         1
+Sai Medical
+Pimpri-Chinchwad                                   9881783270
+
+         2
+Dighi Generic Store
+Pune                                               7709174195
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+CITY                                                    PHONE
+-------------------------------------------------- ----------
+
+         3
+Med Plus
+Kolhapur                                           9423237858
+
+         4
+Pharm Easy
+
+       MNO
+----------
+MNAME
+--------------------------------------------------------------------------------
+CITY                                                    PHONE
+-------------------------------------------------- ----------
+Solapur                                            9850614076
+
+         5
+Easy Life
+Nagar                                              9420204905
+
+SQL> create table Drug
+  2  (dno number(5) primary key,
+  3  dname varchar2(100) NOT NULL UNIQUE,
+  4  dtype varchar2(100) NOT NULL,
+  5  dcompany varchar2(100) NOT NULL,
+  6  price number(5) NOT NULL CHECK(price>0),
+  7  mno number(5) references Medical(mno));
+
+Table created.
+
+SQL> describe Drug;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DNO                                       NOT NULL NUMBER(5)
+ DNAME                                     NOT NULL VARCHAR2(100)
+ DTYPE                                     NOT NULL VARCHAR2(100)
+ DCOMPANY                                  NOT NULL VARCHAR2(100)
+ PRICE                                     NOT NULL NUMBER(5)
+ MNO                                                NUMBER(5)
+
+SQL> insert into Drug values(101,'Adderall','LSD',' Sun-Pharma ',1000,1);
+
+1 row created.
+
+SQL> insert into Drug values(102,'Crocin','Kratom',' Dr Reddy ',1500,2);
+
+1 row created.
+
+SQL> insert into Drug values(103,'Humira','Salvia',' Divs Labs ',2500,3);
+
+1 row created.
+
+SQL> insert into Drug values(104,'Xanax','Steriods','Cipla',3000,4);
+
+1 row created.
+
+SQL> insert into Drug values(105,'Otezla',' Inhalants ','Biocon',3500,5);
+
+1 row created.
+
+SQL> select * from Drug;
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+       101
+Adderall
+LSD
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+Sun-Pharma
+      1000          1
+
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+       102
+Crocin
+Kratom
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+Dr Reddy
+      1500          2
+
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+       103
+Humira
+Salvia
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+Divi Labs
+      2500          3
+
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+       104
+Xanax
+Steriods
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+Cipla
+      3000          4
+
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+       105
+Otezla
+Inhalants
+
+       DNO
+----------
+DNAME
+--------------------------------------------------------------------------------
+DTYPE
+--------------------------------------------------------------------------------
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE        MNO
+---------- ----------
+Biocon
+      3500          5
+
+SQL> create table Medical_Drug
+  2  (mno number(5) references Medical(mno),
+  3  dno number(5) references Drug(dno),
+  4  quantity number(8) NOT NULL CHECK(quantity>0));
+
+Table created.
+
+SQL> describe Medical_Drug;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ MNO                                                NUMBER(5)
+ DNO                                                NUMBER(5)
+ QUANTITY                                  NOT NULL NUMBER(8)
+
+SQL> insert into Medical_Drug values(1,101,500);
+
+1 row created.
+
+SQL> insert into Medical_Drug values(2,102,700);
+
+1 row created.
+
+SQL> insert into Medical_Drug values(3,103,1000);
+
+1 row created.
+
+SQL> insert into Medical_Drug values(4,104,2000);
+
+1 row created.
+
+SQL> insert into Medical_Drug values(5,105,5000);
+
+1 row created.
+
+SQL> select * from Medical_Drug;
+
+       MNO        DNO   QUANTITY
+---------- ---------- ----------
+         1        101        500
+         2        102        700
+         3        103       1000
+         4        104       2000
+         5        105       5000
+
+Q1. Update price of drug by 5% of ‘Cipla’ Company
+Sol:
+SQL> select Drug.dcompany, Drug.price from Drug
+  2  where Drug.dcompany = 'Cipla';
+
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE
+----------
+Cipla
+      3000
+
+SQL> update Drug
+  2  set Drug.price = Drug.price + (Drug.price * 0.05)
+  3  where Drug.dcompany = 'Cipla';
+
+1 row updated.
+
+SQL> select Drug.dcompany, Drug.price from Drug
+  2  where Drug.dcompany = 'Cipla';
+
+DCOMPANY
+--------------------------------------------------------------------------------
+     PRICE
+----------
+Cipla
+      3150
+
+Q2. Display name of all medical stores where ‘Crocin’ is available.
+Sol:
+SQL> select M.mname, M.city, MD.quantity
+  2  from Medical M, Drug D, Medical_Drug MD
+  3  where M.mno = MD.mno and D.dno = MD.dno
+  4  and D.dname = 'Crocin';
+
+MNAME
+--------------------------------------------------------------------------------
+CITY                                                 QUANTITY
+-------------------------------------------------- ----------
+Dighi Generic Store
+Pune                                                      700
+
+Q3. Count total number of drug of ‘Sunpharma’ company in ‘Sai medical’ store.
+Sol:
+SQL> select M.mname, sum(MD.quantity)
+  2  from Medical M, Drug D, Medical_Drug MD
+  3  where M.mno = MD.mno and D.dno = MD.dno
+  4  and D.dcompany = 'Sun-Pharma' and M.mname = 'Sai Medical'
+  5  group by M.mname;
+
+MNAME
+--------------------------------------------------------------------------------
+SUM(MD.QUANTITY)
+----------------
+Sai Medical
+             500
+
+Q4. Display the details of medical store having maximum quantity of Crocin.
+Sol:
+SQL> select M.mname, max(MD.quantity)
+  2  from Medical M, Drug D, Medical_Drug MD
+  3  where M.mno = MD.mno and D.dno = MD.dno
+  4  and D.dname = 'Crocin'
+  5  group by M.mname;
+
+MNAME
+--------------------------------------------------------------------------------
+MAX(MD.QUANTITY)
+----------------
+Dighi Generic Store
+             700
