@@ -3,6 +3,7 @@ Medical (mno,mname,city,phone)
 Drug (dno,dname,dtype,company,price)
 Relation between Medical and Drug is Many to Many with descriptive attribute is quantity.
 Sol:
+
 SQL> create table Medical
   2  (mno number(5) primary key,
   3  mname varchar2(100) NOT NULL,
