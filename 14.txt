@@ -1,0 +1,422 @@
+Q14. Consider the following Entities and Relationship
+Branch (bname, bcity, assets)
+Loan (loan_no, amount)
+Relation between Branch and Loan is One to Many.
+Constraints: Primary Key, amount and assets should be > 0.
+Sol:
+
+SQL> create table Branch
+  2  (bno number(5) primary key,
+  3  bname varchar2(100) NOT NULL,
+  4  bcity varchar2(100) NOT NULL,
+  5  assets number(10) NOT NULL CHECK(assets>0));
+
+Table created.
+
+SQL> describe Branch;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BNO                                       NOT NULL NUMBER(5)
+ BNAME                                     NOT NULL VARCHAR2(100)
+ BCITY                                     NOT NULL VARCHAR2(100)
+ ASSETS                                    NOT NULL NUMBER(10)
+
+SQL> insert into Branch values (101,'ABC branch','Pune',450000);
+
+1 row created.
+
+SQL> insert into Branch values (102,'DYP branch','Mumbai',7500000);
+
+1 row created.
+
+SQL> insert into Branch values (103,'CCC branch','Nashik',1250000);
+
+1 row created.
+
+SQL> insert into Branch values (104,'UYR branch','Pune',9550000);
+
+1 row created.
+
+SQL> insert into Branch values (105,'BMC branch','Mumbai',550000);
+
+1 row created.
+
+SQL> insert into Branch values (106,'KXI branch','Nashik',180000);
+
+1 row created.
+
+SQL> select * from Branch;
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       101
+ABC branch
+Pune
+    450000
+
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       102
+DYP branch
+Mumbai
+   7500000
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       103
+CCC branch
+Nashik
+   1250000
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       104
+UYR branch
+Pune
+   9550000
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       105
+BMC branch
+Mumbai
+    550000
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       106
+KXI branch
+Nashik
+    180000
+
+6 rows selected.
+
+SQL> create table Loan
+  2  (loan_no number(5) primary key,
+  3  amount number(10) NOT NULL CHECK(amount>0),
+  4  bno number(5) references Branch(bno));
+
+Table created.
+
+SQL> describe Loan;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ LOAN_NO                                   NOT NULL NUMBER(5)
+ AMOUNT                                    NOT NULL NUMBER(10)
+ BNO                                                NUMBER(5)
+
+SQL> insert into Loan values (1,500000,101);
+
+1 row created.
+
+SQL> insert into Loan values (2,750000,102);
+
+1 row created.
+
+SQL> insert into Loan values (3,1950000,103);
+
+1 row created.
+
+SQL> insert into Loan values (4,500000,104);
+
+1 row created.
+
+SQL> insert into Loan values (5,180000,105);
+
+1 row created.
+
+SQL> insert into Loan values (6,360000,106);
+
+1 row created.
+
+SQL> insert into Loan values (7,250000,101);
+
+1 row created.
+
+SQL> insert into Loan values (8,150000,102);
+
+1 row created.
+
+SQL> insert into Loan values (9,1750000,103);
+
+1 row created.
+
+SQL> insert into Loan values (10,50000,104);
+
+1 row created.
+
+SQL> insert into Loan values (11,1250000,105);
+
+1 row created.
+
+SQL> insert into Loan values (12,2250000,106);
+
+1 row created.
+
+SQL> select * from Loan;
+
+   LOAN_NO     AMOUNT        BNO
+---------- ---------- ----------
+         1     500000        101
+         2     750000        102
+         3    1950000        103
+         4     500000        104
+         5     180000        105
+         6     360000        106
+         7     250000        101
+         8     150000        102
+         9    1750000        103
+        10      50000        104
+        11    1250000        105
+
+   LOAN_NO     AMOUNT        BNO
+---------- ---------- ----------
+        12    2250000        106
+
+12 rows selected.
+
+Q1. Display total loan amount given by DYP branch.
+Sol:
+
+SQL> select sum(Loan.amount) "Loan_Amount"
+  2  from Branch, Loan
+  3  where Branch.bno = Loan.bno
+  4  and Branch.bname = 'DYP branch';
+
+Loan_Amount
+-----------
+     900000
+
+Q2. Find total number of loan given by each branch.
+Sol:
+
+SQL> select Branch.bname "Branch_Name", count(Loan.loan_no) "Total_Loans"
+  2  from Branch, Loan
+  3  where Branch.bno = Loan.bno
+  4  group by Branch.bname;
+
+Branch_Name
+--------------------------------------------------------------------------------
+Total_Loans
+-----------
+DYP branch
+          2
+
+ABC branch
+          2
+
+UYR branch
+          2
+
+
+Branch_Name
+--------------------------------------------------------------------------------
+Total_Loans
+-----------
+BMC branch
+          2
+
+KXI branch
+          2
+
+CCC branch
+          2
+
+
+6 rows selected.
+
+Q3. Find the name of branch that having maximum assets located in Mumbai.
+Sol:
+
+SQL> select max(Branch.assets) "Mumbai_Assets"
+  2  from Branch
+  3  where Branch.bcity = 'Mumbai' and rownum = 1;
+
+Mumbai_Assets
+-------------
+      7500000
+
+Q4. Display loan details in descending order of their amount
+Sol:
+
+SQL> select Branch.bname, Branch.bcity, Loan.amount
+  2  from Branch, Loan
+  3  where Branch.bno = Loan.bno
+  4  order by Loan.amount;
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    AMOUNT
+----------
+UYR branch
+Pune
+     50000
+
+DYP branch
+Mumbai
+    150000
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    AMOUNT
+----------
+
+BMC branch
+Mumbai
+    180000
+
+ABC branch
+Pune
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    AMOUNT
+----------
+    250000
+
+KXI branch
+Nashik
+    360000
+
+ABC branch
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    AMOUNT
+----------
+Pune
+    500000
+
+UYR branch
+Pune
+    500000
+
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    AMOUNT
+----------
+DYP branch
+Mumbai
+    750000
+
+BMC branch
+Mumbai
+   1250000
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    AMOUNT
+----------
+
+CCC branch
+Nashik
+   1750000
+
+CCC branch
+Nashik
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    AMOUNT
+----------
+   1950000
+
+KXI branch
+Nashik
+   2250000
+
+
+12 rows selected.
+
+Q5. Display all branches located in Mumbai, Pune and Nashik
+Sol:
+
+SQL> select Branch.bname, Branch.bcity
+  2  from Branch
+  3  where Branch.bcity in ('Mumbai','Pune','Nashik');
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+ABC branch
+Pune
+
+DYP branch
+Mumbai
+
+CCC branch
+Nashik
+
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+UYR branch
+Pune
+
+BMC branch
+Mumbai
+
+KXI branch
+Nashik
+
+
+6 rows selected.
