@@ -1,0 +1,337 @@
+Q13. Consider the following Entities and Relationship
+Customer (cust_no, cust_name, street, city)
+Account(ano,branchname, balance)
+Relation between Customer and Account is One to Many.
+Constraints: Primary Key, balance > 500.
+
+Sol:
+SQL> create table Customer
+  2  (cust_no number(5) primary key,
+  3  cust_name varchar2(100) NOT NULL,
+  4  street varchar2(100) NOT NULL,
+  5  city varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUST_NO                                   NOT NULL NUMBER(5)
+ CUST_NAME                                 NOT NULL VARCHAR2(100)
+ STREET                                    NOT NULL VARCHAR2(100)
+ CITY                                      NOT NULL VARCHAR2(100)
+
+SQL> insert into Customer values (1,'Abhijeet Gawas','Alandi Road','Pune');
+
+1 row created.
+
+SQL> insert into Customer values (2,'Sourabh Palande','Tingre Nagar','Pune');
+
+1 row created.
+
+SQL> insert into Customer values (3,'Ameya Kulkarni','Chinchwad','Pune');
+
+1 row created.
+
+SQL> insert into Customer values (4,'Radhika Mohite','Mira Road','Mumbai');
+
+1 row created.
+
+SQL> insert into Customer values (5,'Jaya Mathur','Juhu','Mumbai');
+
+1 row created.
+
+SQL> insert into Customer values (6,'Karishma Singh','Lokhandwala','Mumbai');
+
+1 row created.
+
+SQL> select * from Customer;
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+STREET
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+         1
+Abhijeet Gawas
+Alandi Road
+Pune
+
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+STREET
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+         2
+Sourabh Palande
+Tingre Nagar
+Pune
+
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+STREET
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+         3
+Ameya Kulkarni
+Chinchwad
+Pune
+
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+STREET
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+         4
+Radhika Mohite
+Mira Road
+Mumbai
+
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+STREET
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+         5
+Jaya Mathur
+Juhu
+Mumbai
+
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+STREET
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+         6
+Karishma Singh
+Lokhandwala
+Mumbai
+
+
+6 rows selected.
+
+SQL> create table Account
+  2  (ano varchar(5) primary key,
+  3  branchname varchar2(100) NOT NULL,
+  4  balance number(8) NOT NULL CHECK(balance>500),
+  5  cust_no number(5) references Customer(cust_no));
+
+Table created.
+
+SQL> describe Account;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ANO                                       NOT NULL VARCHAR2(5)
+ BRANCHNAME                                NOT NULL VARCHAR2(100)
+ BALANCE                                   NOT NULL NUMBER(8)
+ CUST_NO                                            NUMBER(5)
+
+SQL> insert into Account values ('A101','Alandi',9000000,1);
+
+1 row created.
+
+SQL> insert into Account values ('A102','Vishwrantwadi',12000000,1);
+
+1 row created.
+
+SQL> insert into Account values ('A103','Chinchwad',45000,2);
+
+1 row created.
+
+SQL> insert into Account values ('A104','Pimpri',1245000,3);
+
+1 row created.
+
+SQL> insert into Account values ('A105','Borivali',2500000,4);
+
+1 row created.
+
+SQL> insert into Account values ('A106','Goregoan',5500000,5);
+
+1 row created.
+
+SQL> insert into Account values ('A107','Chinchwad',200000,1);
+
+1 row created.
+
+SQL> insert into Account values ('A108','Shivaji Nagar',15000,3);
+
+1 row created.
+
+SQL> select * from Account;
+
+ANO
+-----
+BRANCHNAME
+--------------------------------------------------------------------------------
+   BALANCE    CUST_NO
+---------- ----------
+A101
+Alandi
+   9000000          1
+
+A102
+Vishwrantwadi
+  12000000          1
+
+ANO
+-----
+BRANCHNAME
+--------------------------------------------------------------------------------
+   BALANCE    CUST_NO
+---------- ----------
+
+A103
+Chinchwad
+     45000          2
+
+A104
+Pimpri
+
+ANO
+-----
+BRANCHNAME
+--------------------------------------------------------------------------------
+   BALANCE    CUST_NO
+---------- ----------
+   1245000          3
+
+A105
+Borivali
+   2500000          4
+
+A106
+
+ANO
+-----
+BRANCHNAME
+--------------------------------------------------------------------------------
+   BALANCE    CUST_NO
+---------- ----------
+Goregoan
+   5500000          5
+
+A107
+Chinchwad
+    200000          1
+
+
+ANO
+-----
+BRANCHNAME
+--------------------------------------------------------------------------------
+   BALANCE    CUST_NO
+---------- ----------
+A108
+Shivaji Nagar
+     15000          3
+
+
+8 rows selected.
+
+Q1. Display the customer details with balance 100000 and 200000
+Sol:
+SQL> select Customer.cust_name, Account.balance
+  2  from Customer, Account
+  3  where Customer.cust_no = Account.cust_no
+  4  and Account.balance between 100000 and 200000;
+
+CUST_NAME
+--------------------------------------------------------------------------------
+   BALANCE
+----------
+Abhijeet Gawas
+    200000
+
+Q2. Display customers having more than two counts in Chinchwad branch.
+Sol:
+SQL> select Customer.cust_name , count(Account.ano)
+  2  from Customer, Account
+  3  where Customer.cust_no = Account.cust_no
+  4  and Account.branchname = 'Chinchwad'
+  5  group by Customer.cust_name;
+
+CUST_NAME
+--------------------------------------------------------------------------------
+COUNT(ACCOUNT.ANO)
+------------------
+Sourabh Palande
+                 1
+
+Abhijeet Gawas
+                 1
+
+Q3. Delete account whose balance is below balance < 500.
+Sol:
+
+SQL> delete from Account
+  2  where Account.balance <= 500;
+
+0 rows deleted.
+
+Q4. Find number of depositors for each branch.
+Sol:
+SQL> select Account.branchname , count(Account.ano)
+  2  from Account
+  3  group by Account.branchname;
+
+BRANCHNAME
+--------------------------------------------------------------------------------
+COUNT(ACCOUNT.ANO)
+------------------
+Chinchwad
+                 2
+
+Alandi
+                 1
+
+Borivali
+                 1
+
+
+BRANCHNAME
+--------------------------------------------------------------------------------
+COUNT(ACCOUNT.ANO)
+------------------
+Goregoan
+                 1
+
+Vishwrantwadi
+                 1
+
+Shivaji Nagar
+                 1
+
+
+BRANCHNAME
+--------------------------------------------------------------------------------
+COUNT(ACCOUNT.ANO)
+------------------
+Pimpri
+                 1
+
+
+7 rows selected.
