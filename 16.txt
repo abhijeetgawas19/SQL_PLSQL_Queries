@@ -1,0 +1,470 @@
+Q16. Consider the following Entities and Relationship
+Branch (bno, bname, bcity, assets)
+Account (acc_no,balance)
+Relation between Branch and Account is One to Many.
+Constraints: Primary Key, balance and assets should be > 0
+Sol:
+
+SQL> create table Branch
+  2  (bno number(10) primary key,
+  3  bname varchar2(100) NOT NULL,
+  4  bcity varchar2(100) NOT NULL,
+  5  assets number(10) NOT NULL CHECK(assets>0));
+
+Table created.
+
+SQL> describe Branch;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BNO                                       NOT NULL NUMBER(10)
+ BNAME                                     NOT NULL VARCHAR2(100)
+ BCITY                                     NOT NULL VARCHAR2(100)
+ ASSETS                                    NOT NULL NUMBER(10)
+
+SQL> insert into Branch values (101,'BYP Branch','Pune',15636581);
+
+1 row created.
+
+SQL> insert into Branch values (102,'DHC Branch','Pune',48500020);
+
+1 row created.
+
+SQL> insert into Branch values (103,'ABC Branch','Mumbai',12500000);
+
+1 row created.
+
+SQL> insert into Branch values (104,'XNA Branch','Mumbai',75500000);
+
+1 row created.
+
+SQL> insert into Branch values (105,'CCN Branch','Kolhapur',95314756);
+
+1 row created.
+
+SQL> insert into Branch values (106,'JJI Branch','Kolhapur',225225225);
+
+1 row created.
+
+SQL> insert into Branch values (107,'IZI Branch','Sangli',80000000);
+
+1 row created.
+
+SQL> insert into Branch values (108,'UGC Branch','Sangli',558822556);
+
+1 row created.
+
+SQL> select * from Branch;
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       101
+BYP Branch
+Pune
+  15636581
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       102
+DHC Branch
+Pune
+  48500020
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       103
+ABC Branch
+Mumbai
+  12500000
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       104
+XNA Branch
+Mumbai
+  75500000
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       105
+CCN Branch
+Kolhapur
+  95314756
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       106
+JJI Branch
+Kolhapur
+ 225225225
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       107
+IZI Branch
+Sangli
+  80000000
+
+
+       BNO
+----------
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+    ASSETS
+----------
+       108
+UGC Branch
+Sangli
+ 558822556
+
+
+8 rows selected.
+
+SQL> create table Account
+  2  (ano number(10) primary key,
+  3  balance number(10) NOT NULL CHECK(balance>0),
+  4  bno number(10) references Branch(bno));
+
+Table created.
+
+SQL> describe Account;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ANO                                       NOT NULL NUMBER(10)
+ BALANCE                                   NOT NULL NUMBER(10)
+ BNO                                                NUMBER(10)
+
+SQL> insert into Account values (1,7500000,101);
+
+1 row created.
+
+SQL> insert into Account values (2,17500000,101);
+
+1 row created.
+
+SQL> insert into Account values (3,87500100,102);
+
+1 row created.
+
+SQL> insert into Account values (4,5780500,102);
+
+1 row created.
+
+SQL> insert into Account values (5,65258521,103);
+
+1 row created.
+
+SQL> insert into Account values (6,95317458,103);
+
+1 row created.
+
+SQL> insert into Account values (7,88500252,104);
+
+1 row created.
+
+SQL> insert into Account values (8,12512500,104);
+
+1 row created.
+
+SQL> insert into Account values (9,55778800,105);
+
+1 row created.
+
+SQL> insert into Account values (10,358965120,105);
+
+1 row created.
+
+SQL> insert into Account values (11,55002200,106);
+
+1 row created.
+
+SQL> insert into Account values (12,45254530,106);
+
+1 row created.
+
+SQL> insert into Account values (13,98741256,107);
+
+1 row created.
+
+SQL> insert into Account values (14,67894125,107);
+
+1 row created.
+
+SQL> insert into Account values (15,57123698,108);
+
+1 row created.
+
+SQL> insert into Account values (16,74147565,108);
+
+1 row created.
+
+SQL> select * from Account;
+
+       ANO    BALANCE        BNO
+---------- ---------- ----------
+         1    7500000        101
+         2   17500000        101
+         3   87500100        102
+         4    5780500        102
+         5   65258521        103
+         6   95317458        103
+         7   88500252        104
+         8   12512500        104
+         9   55778800        105
+        10  358965120        105
+        11   55002200        106
+
+       ANO    BALANCE        BNO
+---------- ---------- ----------
+        12   45254530        106
+        13   98741256        107
+        14   67894125        107
+        15   57123698        108
+        16   74147565        108
+
+16 rows selected.
+
+Q1. Find the Maximum account balance of each branch.
+Sol:
+SQL> select B.bname, max(A.balance)
+  2  from Branch B, Account A
+  3  where B.bno = A.bno
+  4  group by B.bname;
+
+BNAME
+--------------------------------------------------------------------------------
+MAX(A.BALANCE)
+--------------
+BYP Branch
+      17500000
+
+ABC Branch
+      95317458
+
+DHC Branch
+      87500100
+
+
+BNAME
+--------------------------------------------------------------------------------
+MAX(A.BALANCE)
+--------------
+JJI Branch
+      55002200
+
+IZI Branch
+      98741256
+
+CCN Branch
+     358965120
+
+
+BNAME
+--------------------------------------------------------------------------------
+MAX(A.BALANCE)
+--------------
+XNA Branch
+      88500252
+
+UGC Branch
+      74147565
+
+
+8 rows selected.
+
+Q2. Find branches where average account balance is 30,000
+Sol:
+SQL> select B.bname, avg(A.balance)
+  2  from Branch B, Account A
+  3  where B.bno = A.bno
+  4  group by B.bname
+  5  having avg(A.balance) > 30000;
+
+BNAME
+--------------------------------------------------------------------------------
+AVG(A.BALANCE)
+--------------
+BYP Branch
+      12500000
+
+ABC Branch
+    80287989.5
+
+DHC Branch
+      46640300
+
+
+BNAME
+--------------------------------------------------------------------------------
+AVG(A.BALANCE)
+--------------
+JJI Branch
+      50128365
+
+IZI Branch
+    83317690.5
+
+CCN Branch
+     207371960
+
+
+BNAME
+--------------------------------------------------------------------------------
+AVG(A.BALANCE)
+--------------
+XNA Branch
+      50506376
+
+UGC Branch
+    65635631.5
+
+
+8 rows selected.
+
+Q3. Find the name of all branches that have assets value greater than that of ‘Pune’.
+Sol:
+SQL> select B.bname, B.bcity
+  2  from Branch B
+  3  where B.assets > (select max(B.assets)
+  4  from Branch B where B.bcity = 'Pune');
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+XNA Branch
+Mumbai
+
+CCN Branch
+Kolhapur
+
+JJI Branch
+Kolhapur
+
+
+BNAME
+--------------------------------------------------------------------------------
+BCITY
+--------------------------------------------------------------------------------
+IZI Branch
+Sangli
+
+UGC Branch
+Sangli
+
+Q4. Decrease 3% balance on account whose balance is greater than 100000.
+Sol:
+SQL> select * from Account;
+
+       ANO    BALANCE        BNO
+---------- ---------- ----------
+         1    7500000        101
+         2   17500000        101
+         3   87500100        102
+         4    5780500        102
+         5   65258521        103
+         6   95317458        103
+         7   88500252        104
+         8   12512500        104
+         9   55778800        105
+        10  358965120        105
+        11   55002200        106
+
+       ANO    BALANCE        BNO
+---------- ---------- ----------
+        12   45254530        106
+        13   98741256        107
+        14   67894125        107
+        15   57123698        108
+        16   74147565        108
+
+16 rows selected.
+
+SQL> update Account
+  2  set Account.balance = Account.balance - (0.03 * Account.balance)
+  3  where Account.balance > 100000;
+
+16 rows updated.
+
+SQL> select * from Account;
+
+       ANO    BALANCE        BNO
+---------- ---------- ----------
+         1    7275000        101
+         2   16975000        101
+         3   84875097        102
+         4    5607085        102
+         5   63300765        103
+         6   92457934        103
+         7   85845244        104
+         8   12137125        104
+         9   54105436        105
+        10  348196166        105
+        11   53352134        106
+
+       ANO    BALANCE        BNO
+---------- ---------- ----------
+        12   43896894        106
+        13   95779018        107
+        14   65857301        107
+        15   55409987        108
+        16   71923138        108
+
+16 rows selected.
+
+Q5. Display details of branch whose city start with ‘A’.
+Sol:
+SQL> select B.bname, B.bcity
+  2  from Branch B
+  3  where B.bcity like 'A%';
+
+no rows selected
