@@ -1,0 +1,254 @@
+Q17. Consider the following Entities and Relationship
+Donor (donor_no,donor_name,city)
+Blood_Donation (bid, blood_group, quantity, date of collection)
+Relation between Donor and Blood_Donation is One to Many.
+Constraints: Primary Key, Blood_group should be not null.
+Sol:
+
+SQL> create table Donor
+  2  (donor_no number(5) primary key,
+  3  donor_name varchar2(100) NOT NULL,
+  4  city varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Donor;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DONOR_NO                                  NOT NULL NUMBER(5)
+ DONOR_NAME                                NOT NULL VARCHAR2(100)
+ CITY                                      NOT NULL VARCHAR2(100)
+
+SQL> insert into Donor values (1,'Abhijeet Gawas','Pune');
+
+1 row created.
+
+SQL> insert into Donor values (2,'Ameya Kulkarni','Mumbai');
+
+1 row created.
+
+SQL> insert into Donor values (3,'Sourabh Palande','Delhi');
+
+1 row created.
+
+SQL> insert into Donor values (4,'Prateek Roy','Kolkata');
+
+1 row created.
+
+SQL> insert into Donor values (5,'Chaitainya Joshi','Pune');
+
+1 row created.
+
+SQL> select * from Donor;
+
+  DONOR_NO
+----------
+DONOR_NAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+         1
+Abhijeet Gawas
+Pune
+
+         2
+Ameya Kulkarni
+Mumbai
+
+  DONOR_NO
+----------
+DONOR_NAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+
+         3
+Sourabh Palande
+Delhi
+
+         4
+Prateek Roy
+
+  DONOR_NO
+----------
+DONOR_NAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+Kolkata
+
+         5
+Chaitainya Joshi
+Pune
+
+SQL> create table Blood_Donation
+  2  (bid number(5) primary key,
+  3  blood_group varchar(5) NOT NULL,
+  4  quantity number(5) NOT NULL,
+  5  date_of_collection date NOT NULL,
+  6  donor_no number(5) references Donor(donor_no));
+
+Table created.
+
+SQL> describe Blood_Donation;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BID                                       NOT NULL NUMBER(5)
+ BLOOD_GROUP                               NOT NULL VARCHAR2(5)
+ QUANTITY                                  NOT NULL NUMBER(5)
+ DATE_OF_COLLECTION                        NOT NULL DATE
+ DONOR_NO                                           NUMBER(5)
+
+SQL> insert into Blood_Donation values (101,'A+',250,'25-DEC-2015',1);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (102,'AB+',125,'11-JAN-2016',2);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (103,'A+',100,'21-FEB-2016',1);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (104,'O',175,'28-FEB-2016',3);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (105,'O+',90,'02-MAR-2016',4);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (106,'B+',120,'05-MAR-2016',5);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (107,'A+',95,'11-MAR-2016',1);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (108,'AB+',95,'15-MAR-2016',2);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (109,'O',125,'21-MAR-2016',3);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (110,'O+',125,'21-MAR-2016',4);
+
+1 row created.
+
+SQL> insert into Blood_Donation values (111,'AB+',125,'15-DEC-2016',2);
+
+1 row created.
+
+SQL> select * from Blood_Donation;
+
+       BID BLOOD   QUANTITY DATE_OF_C   DONOR_NO
+---------- ----- ---------- --------- ----------
+       101 A+           250 25-DEC-15          1
+       102 AB+          125 11-JAN-16          2
+       103 A+           100 21-FEB-16          1
+       104 O            175 28-FEB-16          3
+       105 O+            90 02-MAR-16          4
+       106 B+           120 05-MAR-16          5
+       107 A+            95 11-MAR-16          1
+       108 AB+           95 15-MAR-16          2
+       109 O            125 21-MAR-16          3
+       110 O+           125 21-MAR-16          4
+       111 AB+          125 15-DEC-16          2
+
+11 rows selected.
+
+Q1. Display total blood quantity collected on 25th December 2015.
+Sol:
+SQL> select sum(B.quantity) as "Donation_On_25th_Dec_2015"
+  2  from Blood_Donation B
+  3  where B.date_of_collection = '25-DEC-2015';
+
+Donation_On_25th_Dec_2015
+-------------------------
+                      250
+
+Q2. Display total blood donated by each donor
+Sol:
+SQL> select D.donor_name, sum(B.quantity)
+  2  from Donor D, Blood_Donation B
+  3  where D.donor_no = B.donor_no
+  4  group by D.donor_name
+  5  order by D.donor_name;
+
+DONOR_NAME
+--------------------------------------------------------------------------------
+SUM(B.QUANTITY)
+---------------
+Abhijeet Gawas
+            445
+
+Ameya Kulkarni
+            345
+
+Chaitainya Joshi
+            120
+
+
+DONOR_NAME
+--------------------------------------------------------------------------------
+SUM(B.QUANTITY)
+---------------
+Prateek Roy
+            215
+
+Sourabh Palande
+            300
+
+Q3. Display Donor Details having Blood Group ‘A+’
+Sol:
+SQL> select distinct D.donor_name, D.city
+  2  from Donor D, Blood_Donation B
+  3  where D.donor_no = B.donor_no
+  4  and B.blood_group = 'A+';
+
+DONOR_NAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+Abhijeet Gawas
+Pune
+
+Q4. Display the donor who has donated blood group ‘A+ve’.
+Sol:
+SQL> select D.donor_name, D.city, count(B.bid)
+  2  from Donor D, Blood_Donation B
+  3  where D.donor_no = B.donor_no
+  4  group by D.donor_name, D.city
+  5  having count(B.bid) > 2;
+
+DONOR_NAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+COUNT(B.BID)
+------------
+Abhijeet Gawas
+Pune
+           3
+
+Ameya Kulkarni
+Mumbai
+           3
+
+DONOR_NAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+COUNT(B.BID)
+------------
+
+Q5. Display the donor information with blood group whose city name contains ‘sh’.
+Sol:
+SQL> select * from Donor D
+  2  where D.city like '%sh%';
+
+no rows selected
