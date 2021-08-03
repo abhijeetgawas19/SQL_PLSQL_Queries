@@ -1,0 +1,413 @@
+Q18. Consider the following Entities and Relationship
+Bus (bus_no, capacity, depot_no)
+Router (route_no,source,destination,no_of_stations)
+Relation between Bus to Route is Many to One.
+Sol:
+
+SQL> create table Bus
+  2  (bus_no varchar(50) primary key,
+  3  capacity number(10) NOT NULL CHECK(capacity>0),
+  4  depot_no number(5) NOT NULL);
+
+Table created.
+
+SQL> describe Bus;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BUS_NO                                    NOT NULL VARCHAR2(50)
+ CAPACITY                                  NOT NULL NUMBER(10)
+ DEPOT_NO                                  NOT NULL NUMBER(5)
+
+SQL> insert into Bus values ('A-101',50,1);
+
+1 row created.
+
+SQL> insert into Bus values ('A-102',35,1);
+
+1 row created.
+
+SQL> insert into Bus values ('A-103',49,2);
+
+1 row created.
+
+SQL> insert into Bus values ('A-104',50,2);
+
+1 row created.
+
+SQL> insert into Bus values ('A-105',25,3);
+
+1 row created.
+
+SQL> insert into Bus values ('A-106',45,3);
+
+1 row created.
+
+SQL> insert into Bus values ('A-107',20,1);
+
+1 row created.
+
+SQL> insert into Bus values ('A-108',39,1);
+
+1 row created.
+
+SQL> insert into Bus values ('A-109',60,1);
+
+1 row created.
+
+SQL> insert into Bus values ('A-110',19,2);
+
+1 row created.
+
+SQL> insert into Bus values ('A-111',45,3);
+
+1 row created.
+
+SQL> insert into Bus values ('A-112',50,3);
+
+1 row created.
+
+SQL> select * from Bus;
+
+BUS_NO                                               CAPACITY   DEPOT_NO
+-------------------------------------------------- ---------- ----------
+A-101                                                      50          1
+A-102                                                      35          1
+A-103                                                      49          2
+A-104                                                      50          2
+A-105                                                      25          3
+A-106                                                      45          3
+A-107                                                      20          1
+A-108                                                      39          1
+A-109                                                      60          1
+A-110                                                      19          2
+A-111                                                      45          3
+
+BUS_NO                                               CAPACITY   DEPOT_NO
+-------------------------------------------------- ---------- ----------
+A-112                                                      50          3
+
+12 rows selected.
+
+SQL> create table Route
+  2  (route_no number(5) primary key,
+  3  source varchar(100) NOT NULL,
+  4  destination varchar(100) NOT NULL,
+  5  no_of_stations number(5) NOT NULL,
+  6  bus_no varchar(50) references Bus(bus_no) on delete cascade);
+
+Table created.
+
+SQL> describe Route;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ROUTE_NO                                  NOT NULL NUMBER(5)
+ SOURCE                                    NOT NULL VARCHAR2(100)
+ DESTINATION                               NOT NULL VARCHAR2(100)
+ NO_OF_STATIONS                            NOT NULL NUMBER(5)
+ BUS_NO                                             VARCHAR2(50)
+
+SQL> insert into Route values (1,'Chinchwad','Katraj',5,'A-101');
+
+1 row created.
+
+SQL> insert into Route values (2,'Chinchwad','Katraj',7,'A-101');
+
+1 row created.
+
+SQL> insert into Route values (3,'Swargate','Hadapsar',5,'A-102');
+
+1 row created.
+
+SQL> insert into Route values (4,'Swargate','Hadapsar',3,'A-102');
+
+1 row created.
+
+SQL> insert into Route values (5,'Swargate','Hadapsar',7,'A-102');
+
+1 row created.
+
+SQL> insert into Route values (6,'Nigadi','Kothrud',6,'A-103');
+
+1 row created.
+
+SQL> insert into Route values (7,'Nigadi','Kothrud',3,'A-103');
+
+1 row created.
+
+SQL> insert into Route values (8,'Nigadi','Kothrud',7,'A-103');
+
+1 row created.
+
+SQL> insert into Route values (9,'Chinchwad','Katraj',4,'A-104');
+
+1 row created.
+
+SQL> insert into Route values (10,'Chinchwad','Katraj',7,'A-104');
+
+1 row created.
+
+SQL> insert into Route values (11,'Swargate','Hadapsar',5,'A-104');
+
+1 row created.
+
+SQL> insert into Route values (12,'Nigadi','Kothrud',8,'A-105');
+
+1 row created.
+
+SQL> select * from Route;
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         1
+Chinchwad
+Katraj
+             5 A-101
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         2
+Chinchwad
+Katraj
+             7 A-101
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         3
+Swargate
+Hadapsar
+             5 A-102
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         4
+Swargate
+Hadapsar
+             3 A-102
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         5
+Swargate
+Hadapsar
+             7 A-102
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         6
+Nigadi
+Kothrud
+             6 A-103
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         7
+Nigadi
+Kothrud
+             3 A-103
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         8
+Nigadi
+Kothrud
+             7 A-103
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+         9
+Chinchwad
+Katraj
+             4 A-104
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+        10
+Chinchwad
+Katraj
+             7 A-104
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+        11
+Swargate
+Hadapsar
+             5 A-104
+
+
+  ROUTE_NO
+----------
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+NO_OF_STATIONS BUS_NO
+-------------- --------------------------------------------------
+        12
+Nigadi
+Kothrud
+             8 A-105
+
+
+12 rows selected.
+
+Q1. Find out the details on which buses run whose capacity is 20 runs.
+Sol:
+SQL> select B.bus_no, B.depot_no
+  2  from Bus B
+  3  where B.capacity = 20;
+
+BUS_NO                                               DEPOT_NO
+-------------------------------------------------- ----------
+A-107                                                       1
+
+Q2. Display number of station from Chinchwad to Katraj.
+Sol:
+SQL> select R.route_no, B.bus_no, R.no_of_stations
+  2  from Bus B, Route R
+  3  where B.bus_no = R.bus_no
+  4  and source = 'Chinchwad' and destination = 'Katraj';
+
+  ROUTE_NO BUS_NO                                             NO_OF_STATIONS
+---------- -------------------------------------------------- --------------
+         1 A-101                                                           5
+         2 A-101                                                           7
+         9 A-104                                                           4
+        10 A-104                                                           7
+
+Q3. Display the routes on which more than 3 buses runs.
+Sol:
+SQL> select distinct R.source , R.destination, count(B.bus_no)
+  2  from Bus B, Route R
+  3  where B.bus_no = R.bus_no
+  4  group by R.source, R.destination
+  5  having count(B.bus_no) > 3;
+
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+COUNT(B.BUS_NO)
+---------------
+Chinchwad
+Katraj
+              4
+
+Swargate
+Hadapsar
+              4
+
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+COUNT(B.BUS_NO)
+---------------
+
+Nigadi
+Kothrud
+              4
+
+Q4. Display number of buses of route ‘Swargate’ to ‘Hadapsar’.
+Sol:
+SQL> select R.source, R.destination, count(B.bus_no)
+  2  from Bus B, Route R
+  3  where B.bus_no = R.bus_no and R.source = 'Swargate' and R.destination = 'Hadapsar'
+  4  group by R.source, R.destination;
+
+SOURCE
+--------------------------------------------------------------------------------
+DESTINATION
+--------------------------------------------------------------------------------
+COUNT(B.BUS_NO)
+---------------
+Swargate
+Hadapsar
+              4
+
+Q5. Find the bus having maximum capacity from ‘Nigadi’ to ‘Kothrud’.
+Sol:
+SQL> select B.bus_no , max(B.capacity)
+  2  from Bus B, Route R
+  3  where B.bus_no = R.bus_no and rownum = 1
+  4  and R.source = 'Nigadi' and R.destination = 'Kothrud'
+  5  group by B.bus_no;
+
+BUS_NO                                             MAX(B.CAPACITY)
+-------------------------------------------------- ---------------
+A-103                                                           49
