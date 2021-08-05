@@ -1,0 +1,420 @@
+Q19. Consider the following Entities and Relationship
+Person (driver_id, driver_name, address)
+Car (licence_no, model, year)
+Relation between Person and Car is Many to Many with date as descriptive attribute
+Sol:
+
+SQL> create table Person
+  2  (driver_id number(5) primary key,
+  3  driver_name varchar2(100) NOT NULL,
+  4  address varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Person;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                 NOT NULL NUMBER(5)
+ DRIVER_NAME                               NOT NULL VARCHAR2(100)
+ ADDRESS                                   NOT NULL VARCHAR2(100)
+
+SQL> insert into Person values (1,'Mr Abhijeet','Dighi');
+
+1 row created.
+
+SQL> insert into Person values (2,'Mr Sourabh','Yerawada');
+
+1 row created.
+
+SQL> insert into Person values (3,'Mr Ameya','Chinchwad');
+
+1 row created.
+
+SQL> insert into Person values (4,'Mr Rohan','Bhosari');
+
+1 row created.
+
+SQL> insert into Person values (5,'Mr Ram','Pimpri');
+
+1 row created.
+
+SQL> select * from Person;
+
+ DRIVER_ID
+----------
+DRIVER_NAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+         1
+Mr Abhijeet
+Dighi
+
+         2
+Mr Sourabh
+Yerawada
+
+ DRIVER_ID
+----------
+DRIVER_NAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+
+         3
+Mr Ameya
+Chinchwad
+
+         4
+Mr Rohan
+
+ DRIVER_ID
+----------
+DRIVER_NAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+Bhosari
+
+         5
+Mr Ram
+Pimpri
+
+SQL> create table Car
+  2  (license_no number(5) primary key,
+  3  model varchar2(100) NOT NULL,
+  4  year number(4) NOT NULL CHECK(year>2000),
+  5  driver_id number(5) references Person(driver_id) on delete cascade);
+
+Table created.
+
+SQL> describe Car;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ LICENSE_NO                                NOT NULL NUMBER(5)
+ MODEL                                     NOT NULL VARCHAR2(100)
+ YEAR                                      NOT NULL NUMBER(4)
+ DRIVER_ID                                          NUMBER(5)
+
+SQL> insert into Car values (101,'Alto',2005,1);
+
+1 row created.
+
+SQL> insert into Car values (102,'Santro',2007,2);
+
+1 row created.
+
+SQL> insert into Car values (103,'Wagon-R',2007,3);
+
+1 row created.
+
+SQL> insert into Car values (104,'Alto',2008,4);
+
+1 row created.
+
+SQL> insert into Car values (105,'Wagon-R',2009,5);
+
+1 row created.
+
+SQL> insert into Car values (106,'Santro',2010,1);
+
+1 row created.
+
+SQL> insert into Car values (107,'Wagon-R',2011,2);
+
+1 row created.
+
+SQL> insert into Car values (108,'Alto',2011,3);
+
+1 row created.
+
+SQL> insert into Car values (109,'Santro',2011,4);
+
+1 row created.
+
+SQL> insert into Car values (110,'Wagon-R',2012,5);
+
+1 row created.
+
+SQL> select * from Car;
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+      YEAR  DRIVER_ID
+---------- ----------
+       101
+Alto
+      2005          1
+
+       102
+Santro
+      2007          2
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+      YEAR  DRIVER_ID
+---------- ----------
+
+       103
+Wagon-R
+      2007          3
+
+       104
+Alto
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+      YEAR  DRIVER_ID
+---------- ----------
+      2008          4
+
+       105
+Wagon-R
+      2009          5
+
+       106
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+      YEAR  DRIVER_ID
+---------- ----------
+Santro
+      2010          1
+
+       107
+Wagon-R
+      2011          2
+
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+      YEAR  DRIVER_ID
+---------- ----------
+       108
+Alto
+      2011          3
+
+       109
+Santro
+      2011          4
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+      YEAR  DRIVER_ID
+---------- ----------
+
+       110
+Wagon-R
+      2012          5
+
+
+10 rows selected.
+
+SQL> create table Person_Car
+  2  (driver_id number(5) references Person(driver_id) on delete cascade,
+  3  license_no number(5) references Car(license_no) on delete cascade,
+  4  date_of_drive date NOT NULL);
+
+Table created.
+
+SQL> describe Person_Car;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ DRIVER_ID                                          NUMBER(5)
+ LICENSE_NO                                         NUMBER(5)
+ DATE_OF_DRIVE                             NOT NULL DATE
+
+SQL> insert into Person_Car values (1,101,'10-JAN-2005');
+
+1 row created.
+
+SQL> insert into Person_Car values (2,102,'12-MAR-2007');
+
+1 row created.
+
+SQL> insert into Person_Car values (3,103,'15-MAR-2007');
+
+1 row created.
+
+SQL> insert into Person_Car values (4,104,'11-APR-2008');
+
+1 row created.
+
+SQL> insert into Person_Car values (5,105,'19-APR-2009');
+
+1 row created.
+
+SQL> insert into Person_Car values (1,106,'27-MAY-2010');
+
+1 row created.
+
+SQL> insert into Person_Car values (2,107,'22-JULY-2011');
+
+1 row created.
+
+SQL> insert into Person_Car values (3,108,'14-AUG-2011');
+
+1 row created.
+
+SQL> insert into Person_Car values (4,109,'21-SEP-2011');
+
+1 row created.
+
+SQL> insert into Person_Car values (5,110,'10-OCT-2012');
+
+1 row created.
+
+SQL> select * from Person_Car;
+
+ DRIVER_ID LICENSE_NO DATE_OF_D
+---------- ---------- ---------
+         1        101 10-JAN-05
+         2        102 12-MAR-07
+         3        103 15-MAR-07
+         4        104 11-APR-08
+         5        105 19-APR-09
+         1        106 27-MAY-10
+         2        107 22-JUL-11
+         3        108 14-AUG-11
+         4        109 21-SEP-11
+         5        110 10-OCT-12
+
+10 rows selected.
+
+Q1. Display details of all person who are driving ‘Alto’ Car.
+Sol:
+SQL> select P.driver_name, P.address
+  2  from Person P, Car C
+  3  where P.driver_id = C.driver_id
+  4  and C.model = 'Alto';
+
+DRIVER_NAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+Mr Abhijeet
+Dighi
+
+Mr Ameya
+Chinchwad
+
+Mr Rohan
+Bhosari
+
+Q2. Count the number of car driven by each driver.
+Sol:
+SQL> select P.driver_name , count(C.license_no)
+  2  from Person P, Car C
+  3  where P.driver_id = C.driver_id
+  4  group by P.driver_name;
+
+DRIVER_NAME
+--------------------------------------------------------------------------------
+COUNT(C.LICENSE_NO)
+-------------------
+Mr Abhijeet
+                  2
+
+Mr Ram
+                  2
+
+Mr Ameya
+                  2
+
+
+DRIVER_NAME
+--------------------------------------------------------------------------------
+COUNT(C.LICENSE_NO)
+-------------------
+Mr Sourabh
+                  2
+
+Mr Rohan
+                  2
+
+Q3. Display car details manufactured after 2000.
+Sol:
+SQL> select C.license_no, C.model
+  2  from Car C
+  3  where C.year > 2000;
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+       101
+Alto
+
+       102
+Santro
+
+       103
+Wagon-R
+
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+       104
+Alto
+
+       105
+Wagon-R
+
+       106
+Santro
+
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+       107
+Wagon-R
+
+       108
+Alto
+
+       109
+Santro
+
+
+LICENSE_NO
+----------
+MODEL
+--------------------------------------------------------------------------------
+       110
+Wagon-R
+
+
+10 rows selected.
+
+Q4. ‘Mr Ram’ travelling Details.
+Sol:
+SQL> select C.model , PC.date_of_drive
+  2  from Person P, Car C, Person_Car PC
+  3  where P.driver_id = PC.driver_id and C.license_no = PC.license_no
+  4  and P.driver_name = 'Mr Ram';
+
+MODEL
+--------------------------------------------------------------------------------
+DATE_OF_D
+---------
+Wagon-R
+19-APR-09
+
+Wagon-R
+10-OCT-12
