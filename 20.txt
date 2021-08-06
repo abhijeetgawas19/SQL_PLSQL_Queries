@@ -1,0 +1,411 @@
+Q20. Consider the following Entities and Relationship
+Person (pno,name,dob, income)
+Area (ano,aname, atype, apopulation)
+Relation between Person and Area is Many to One.
+Constraints: Primary Key, income > 0, atype should be rural or urban
+Sol:
+
+SQL> create table Area_
+  2  (ano number(5) primary key,
+  3  aname varchar2(100) NOT NULL,
+  4  atype varchar2(5) NOT NULL CHECK (atype in ('URBAN','RURAL')),
+  5  apopulation number(10) NOT NULL CHECK(apopulation > 0));
+
+Table created.
+
+SQL> describe Area_;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ANO                                       NOT NULL NUMBER(5)
+ ANAME                                     NOT NULL VARCHAR2(100)
+ ATYPE                                     NOT NULL VARCHAR2(5)
+ APOPULATION                               NOT NULL NUMBER(10)
+
+SQL> insert into Area_ values (1,'Pune','URBAN',450000);
+
+1 row created.
+
+SQL> insert into Area_ values (2,'Mumbai','URBAN',750000);
+
+1 row created.
+
+SQL> insert into Area_ values (3,'Kolhapur','RURAL',125000);
+
+1 row created.
+
+SQL> insert into Area_ values (4,'Ahemdnagar','RURAL',80000);
+
+1 row created.
+
+SQL> insert into Area_ values (5,'Sangli','URBAN',49000);
+
+1 row created.
+
+SQL> insert into Area_ values (6,'Solapur','RURAL',37000);
+
+1 row created.
+
+SQL> select * from Area_;
+
+       ANO
+----------
+ANAME
+--------------------------------------------------------------------------------
+ATYPE APOPULATION
+----- -----------
+         1
+Pune
+URBAN      450000
+
+         2
+Mumbai
+URBAN      750000
+
+       ANO
+----------
+ANAME
+--------------------------------------------------------------------------------
+ATYPE APOPULATION
+----- -----------
+
+         3
+Kolhapur
+RURAL      125000
+
+         4
+Ahemdnagar
+
+       ANO
+----------
+ANAME
+--------------------------------------------------------------------------------
+ATYPE APOPULATION
+----- -----------
+RURAL       80000
+
+         5
+Sangli
+URBAN       49000
+
+         6
+
+       ANO
+----------
+ANAME
+--------------------------------------------------------------------------------
+ATYPE APOPULATION
+----- -----------
+Solapur
+RURAL       37000
+
+
+6 rows selected.
+
+SQL> create table Person
+  2  (pno number(5) primary key,
+  3  name varchar(200) NOT NULL,
+  4  dob date NOT NULL,
+  5  income number(10) NOT NULL CHECK(income > 0),
+  6  ano number(5) references Area_(ano) on delete cascade);
+
+Table created.
+
+SQL> describe Person;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNO                                       NOT NULL NUMBER(5)
+ NAME                                      NOT NULL VARCHAR2(200)
+ DOB                                       NOT NULL DATE
+ INCOME                                    NOT NULL NUMBER(10)
+ ANO                                                NUMBER(5)
+
+SQL> insert into Person values (101,'Abhijeet Gawas','10-OCT-1997',455000,1);
+
+1 row created.
+
+SQL> insert into Person values (102,'Ameya Kulkarni','21-JAN-1998',550000,1);
+
+1 row created.
+
+SQL> insert into Person values (103,'Sourabh Palande','05-JAN-1998',750000,2);
+
+1 row created.
+
+SQL> insert into Person values (104,'Rohan Kamble','19-JUN-1998',350000,2);
+
+1 row created.
+
+SQL> insert into Person values (105,'Prateek Roy','06-DEC-1997',250000,3);
+
+1 row created.
+
+SQL> insert into Person values (106,'Chaitaniya Joshi','21-DEC-1997',550000,3);
+
+1 row created.
+
+SQL> insert into Person values (107,'Shakuntala Ghodke','17-DEC-1998',950000,4);
+
+1 row created.
+
+SQL> insert into Person values (108,'Shubhangi Gawade','15-NOV-1998',250000,4);
+
+1 row created.
+
+SQL> insert into Person values (109,'Supriya Khandagale','10-APR-1998',550000,5);
+
+1 row created.
+
+SQL> insert into Person values (110,'Manisha Bhosle','21-DEC-1996',150000,5);
+
+1 row created.
+
+SQL> insert into Person values (111,'Pradnya Kumar','15-NOV-1998',250000,6);
+
+1 row created.
+
+SQL> insert into Person values (112,'Pratiksha Mane','28-AUG-1997',750000,6);
+
+1 row created.
+
+SQL> select * from Person;
+
+       PNO
+----------
+NAME
+--------------------------------------------------------------------------------
+DOB           INCOME        ANO
+--------- ---------- ----------
+       101
+Abhijeet Gawas
+10-OCT-97     455000          1
+
+       102
+Ameya Kulkarni
+21-JAN-98     550000          1
+
+       PNO
+----------
+NAME
+--------------------------------------------------------------------------------
+DOB           INCOME        ANO
+--------- ---------- ----------
+
+       103
+Sourabh Palande
+05-JAN-98     750000          2
+
+       104
+Rohan Kamble
+
+       PNO
+----------
+NAME
+--------------------------------------------------------------------------------
+DOB           INCOME        ANO
+--------- ---------- ----------
+19-JUN-98     350000          2
+
+       105
+Prateek Roy
+06-DEC-97     250000          3
+
+       106
+
+       PNO
+----------
+NAME
+--------------------------------------------------------------------------------
+DOB           INCOME        ANO
+--------- ---------- ----------
+Chaitaniya Joshi
+21-DEC-97     550000          3
+
+       107
+Shakuntala Ghodke
+17-DEC-98     950000          4
+
+
+       PNO
+----------
+NAME
+--------------------------------------------------------------------------------
+DOB           INCOME        ANO
+--------- ---------- ----------
+       108
+Shubhangi Gawade
+15-NOV-98     250000          4
+
+       109
+Supriya Khandagale
+10-APR-98     550000          5
+
+       PNO
+----------
+NAME
+--------------------------------------------------------------------------------
+DOB           INCOME        ANO
+--------- ---------- ----------
+
+       110
+Manisha Bhosle
+21-DEC-96     150000          5
+
+       111
+Pradnya Kumar
+
+       PNO
+----------
+NAME
+--------------------------------------------------------------------------------
+DOB           INCOME        ANO
+--------- ---------- ----------
+15-NOV-98     250000          6
+
+       112
+Pratiksha Mane
+28-AUG-97     750000          6
+
+
+12 rows selected.
+
+Q1. Display persons having income greater than 1 lakhs in Pune Area.
+Sol:
+SQL> select P.name as "Person_Name"
+  2  from Person P, Area_ A
+  3  where A.ano = P.ano
+  4  and P.income > 100000
+  5  and A.aname = 'Pune';
+
+Person_Name
+--------------------------------------------------------------------------------
+Abhijeet Gawas
+Ameya Kulkarni
+
+Q2. Display population of each area.
+Sol:
+SQL> select A.aname, A.apopulation
+  2  from Area_ A;
+
+ANAME
+--------------------------------------------------------------------------------
+APOPULATION
+-----------
+Pune
+     450000
+
+Mumbai
+     750000
+
+Kolhapur
+     125000
+
+
+ANAME
+--------------------------------------------------------------------------------
+APOPULATION
+-----------
+Ahemdnagar
+      80000
+
+Sangli
+      49000
+
+Solapur
+      37000
+
+
+6 rows selected.
+
+Q3. Display person details from ‘Urban’ area.
+Sol:
+SQL> select P.name
+  2  from Area_ A, Person P
+  3  where A.ano = P.ano and A.atype = 'URBAN';
+
+NAME
+--------------------------------------------------------------------------------
+Abhijeet Gawas
+Ameya Kulkarni
+Sourabh Palande
+Rohan Kamble
+Supriya Khandagale
+Manisha Bhosle
+
+6 rows selected.
+
+Q4. Display the details of area having population greater than that of in Pune.
+Sol:
+SQL> select A.aname, A.atype
+  2  from Area_ A
+  3  where A.apopulation > (select A.apopulation from Area_ A where A.aname = 'Pune');
+
+ANAME
+--------------------------------------------------------------------------------
+ATYPE
+-----
+Mumbai
+URBAN
+
+Q5. Display details of person from each area having minimum income.
+Sol: 
+SQL> select P.name, A.aname, P.income
+  2  from Area_ A, Person P
+  3  where A.ano = P.ano
+  4  and p.income in (select min(P.income)
+  5  from Area_ A, Person P
+  6  where A.ano = P.ano
+  7  group by A.aname);
+
+NAME
+--------------------------------------------------------------------------------
+ANAME
+--------------------------------------------------------------------------------
+    INCOME
+----------
+Manisha Bhosle
+Sangli
+    150000
+
+Rohan Kamble
+Mumbai
+    350000
+
+NAME
+--------------------------------------------------------------------------------
+ANAME
+--------------------------------------------------------------------------------
+    INCOME
+----------
+
+Pradnya Kumar
+Solapur
+    250000
+
+Shubhangi Gawade
+Ahemdnagar
+
+NAME
+--------------------------------------------------------------------------------
+ANAME
+--------------------------------------------------------------------------------
+    INCOME
+----------
+    250000
+
+Prateek Roy
+Kolhapur
+    250000
+
+Abhijeet Gawas
+
+NAME
+--------------------------------------------------------------------------------
+ANAME
+--------------------------------------------------------------------------------
+    INCOME
+----------
+Pune
+    455000
+
+
+6 rows selected.
