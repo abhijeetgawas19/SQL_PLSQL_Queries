@@ -1,0 +1,420 @@
+Q21. Consider the following Entities and Relationship
+Book (book_no, book_name, price)
+Publisher (pno, pname, city)
+Relation between Book and Publisher is Many to Many with quantity as descriptive attributes
+Constraints: Primary Key, price > 0
+Sol:
+SQL> create table Book
+  2  (book_no number(5) primary key,
+  3  book_name varchar2(200) NOT NULL,
+  4  price number(5) NOT NULL CHECK(price > 0));
+
+Table created.
+
+SQL> describe Book;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BOOK_NO                                   NOT NULL NUMBER(5)
+ BOOK_NAME                                 NOT NULL VARCHAR2(200)
+ PRICE                                     NOT NULL NUMBER(5)
+
+SQL> insert into Book values (1,'Database Management System',550);
+
+1 row created.
+
+SQL> insert into Book values (2,'Data Structures using C',450);
+
+1 row created.
+
+SQL> insert into Book values (3,'PL/SQL',200);
+
+1 row created.
+
+SQL> insert into Book values (4,'Software Project Management',150);
+
+1 row created.
+
+SQL> insert into Book values (5,'Internet of Things',555);
+
+1 row created.
+
+SQL> insert into Book values (6,'Web Development',750);
+
+1 row created.
+
+SQL> select * from Book;
+
+   BOOK_NO
+----------
+BOOK_NAME
+--------------------------------------------------------------------------------
+     PRICE
+----------
+         1
+Database Management System
+       550
+
+         2
+Data Structures using C
+       450
+
+   BOOK_NO
+----------
+BOOK_NAME
+--------------------------------------------------------------------------------
+     PRICE
+----------
+
+         3
+PL/SQL
+       200
+
+         4
+Software Project Management
+
+   BOOK_NO
+----------
+BOOK_NAME
+--------------------------------------------------------------------------------
+     PRICE
+----------
+       150
+
+         5
+Internet of Things
+       555
+
+         6
+
+   BOOK_NO
+----------
+BOOK_NAME
+--------------------------------------------------------------------------------
+     PRICE
+----------
+Web Development
+       750
+
+
+6 rows selected.
+
+SQL> create table Publisher
+  2  (pno number(5) primary key,
+  3  pname varchar2(100) NOT NULL,
+  4  city varchar2(100) NOT NULL,
+  5  book_no number(5) references Book(book_no) on delete cascade);
+
+Table created.
+
+SQL> describe Publisher;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNO                                       NOT NULL NUMBER(5)
+ PNAME                                     NOT NULL VARCHAR2(100)
+ CITY                                      NOT NULL VARCHAR2(100)
+ BOOK_NO                                            NUMBER(5)
+
+SQL> insert into Publisher values (101,'BPV Publication','Pune',1);
+
+1 row created.
+
+SQL> insert into Publisher values (102,'ABC Publication','Mumbai',2);
+
+1 row created.
+
+SQL> insert into Publisher values (103,'HGD Publication','Nagar',3);
+
+1 row created.
+
+SQL> insert into Publisher values (104,'UQA Publication','Kolhapur',4);
+
+1 row created.
+
+SQL> insert into Publisher values (105,'KAS Publication','Solapur',5);
+
+1 row created.
+
+SQL> insert into Publisher values (106,'APS Publication','Sangli',6);
+
+1 row created.
+
+SQL> select * from Publisher;
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+       101
+BPV Publication
+Pune
+         1
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+       102
+ABC Publication
+Mumbai
+         2
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+       103
+HGD Publication
+Nagar
+         3
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+       104
+UQA Publication
+Kolhapur
+         4
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+       105
+KAS Publication
+Solapur
+         5
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+CITY
+--------------------------------------------------------------------------------
+   BOOK_NO
+----------
+       106
+APS Publication
+Sangli
+         6
+
+
+6 rows selected.
+
+SQL> create table Book_Publisher
+  2  (book_no number(5) references Book(book_no) on delete cascade,
+  3  pno number(5) references Publisher(pno) on delete cascade,
+  4  quantity number(5) NOT NULL CHECK(quantity > 0));
+
+Table created.
+
+SQL> describe Book_Publisher;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ BOOK_NO                                            NUMBER(5)
+ PNO                                                NUMBER(5)
+ QUANTITY                                  NOT NULL NUMBER(5)
+
+SQL> insert into Book_Publisher values (1,101,45);
+
+1 row created.
+
+SQL> insert into Book_Publisher values (2,102,35);
+
+1 row created.
+
+SQL> insert into Book_Publisher values (3,103,29);
+
+1 row created.
+
+SQL> insert into Book_Publisher values (4,104,55);
+
+1 row created.
+
+SQL> insert into Book_Publisher values (5,105,75);
+
+1 row created.
+
+SQL> insert into Book_Publisher values (6,106,105);
+
+1 row created.
+
+SQL> select * from Book_Publisher;
+
+   BOOK_NO        PNO   QUANTITY
+---------- ---------- ----------
+         1        101         45
+         2        102         35
+         3        103         29
+         4        104         55
+         5        105         75
+         6        106        105
+
+6 rows selected.
+Q1. Display total quantity of each book.
+Sol:
+SQL> select B.book_name, BP.quantity
+  2  from Book B, Book_Publisher BP
+  3  where B.book_no = BP.book_no;
+
+BOOK_NAME
+--------------------------------------------------------------------------------
+  QUANTITY
+----------
+Database Management System
+        45
+
+Data Structures using C
+        35
+
+PL/SQL
+        29
+
+
+BOOK_NAME
+--------------------------------------------------------------------------------
+  QUANTITY
+----------
+Software Project Management
+        55
+
+Internet of Things
+        75
+
+Web Development
+       105
+
+
+6 rows selected.
+
+Q2. Display Publisher names from ‘Pune’.
+Sol:
+SQL> select P.pname
+  2  from Publisher P
+  3  where P.city = 'Pune';
+
+PNAME
+--------------------------------------------------------------------------------
+BPV Publication
+
+Q3. Display all publisher publishing 1 or more books
+Sol:
+SQL> select P.pname, count(P.book_no)
+  2  from Publisher P
+  3  group by P.pname
+  4  having count(P.book_no) > = 1;
+
+PNAME
+--------------------------------------------------------------------------------
+COUNT(P.BOOK_NO)
+----------------
+BPV Publication
+               1
+
+KAS Publication
+               1
+
+ABC Publication
+               1
+
+
+PNAME
+--------------------------------------------------------------------------------
+COUNT(P.BOOK_NO)
+----------------
+HGD Publication
+               1
+
+UQA Publication
+               1
+
+APS Publication
+               1
+
+
+6 rows selected.
+
+Q4. Display publisher having average books price less than average book price of ‘BPV Publication’.
+Sol:
+SQL> select P.pname, avg(B.price)
+  2  from Book B, Publisher P
+  3  where B.book_no = P.book_no
+  4  group by P.pname
+  5  having avg(B.price) < (select avg(B.price)
+  6  from Book B, Publisher P
+  7  where B.book_no = P.book_no
+  8  and P.pname = 'BPV Publication');
+
+PNAME
+--------------------------------------------------------------------------------
+AVG(B.PRICE)
+------------
+ABC Publication
+         450
+
+HGD Publication
+         200
+
+UQA Publication
+         150
+
+Q5. Display publisher wise book details.
+Sol:
+SQL> select distinct P.pname, B.book_name
+  2  from Book B, Publisher P
+  3  where B.book_no = P.book_no;
+
+PNAME
+--------------------------------------------------------------------------------
+BOOK_NAME
+--------------------------------------------------------------------------------
+BPV Publication
+Database Management System
+
+HGD Publication
+PL/SQL
+
+UQA Publication
+Software Project Management
+
+
+PNAME
+--------------------------------------------------------------------------------
+BOOK_NAME
+--------------------------------------------------------------------------------
+KAS Publication
+Internet of Things
+
+ABC Publication
+Data Structures using C
+
+APS Publication
+Web Development
+
+
+6 rows selected.
