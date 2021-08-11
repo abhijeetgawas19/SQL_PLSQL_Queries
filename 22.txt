@@ -1,0 +1,606 @@
+Q22. Consider the following Entities and Relationship,
+Student (stud_no,name,class)
+Competition (comp_no,comp_name,comp_type)
+Relation between Student and Competition is Many to Many with rank and year as descriptive attribute.
+Constraints: Primary Key.
+Sol:
+
+SQL> create table Competition
+  2  (cno number(5) primary key,
+  3  cname varchar2(100) NOT NULL,
+  4  ctype varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Competition;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CNO                                       NOT NULL NUMBER(5)
+ CNAME                                     NOT NULL VARCHAR2(100)
+ CTYPE                                     NOT NULL VARCHAR2(100)
+
+SQL> insert into Competition values (1,'E-Rangoli','Extra-Circular');
+
+1 row created.
+
+SQL> insert into Competition values (2,'CodeVita','Programming');
+
+1 row created.
+
+SQL> insert into Competition values (3,'Football Tournament','Sports');
+
+1 row created.
+
+SQL> insert into Competition values (4,'Elementary Competition','Arts');
+
+1 row created.
+
+SQL> select * from Competition;
+
+       CNO
+----------
+CNAME
+--------------------------------------------------------------------------------
+CTYPE
+--------------------------------------------------------------------------------
+         1
+E-Rangoli
+Extra-Circular
+
+         2
+CodeVita
+Programming
+
+       CNO
+----------
+CNAME
+--------------------------------------------------------------------------------
+CTYPE
+--------------------------------------------------------------------------------
+
+         3
+Football Tournament
+Sports
+
+         4
+Elementary Competition
+
+       CNO
+----------
+CNAME
+--------------------------------------------------------------------------------
+CTYPE
+--------------------------------------------------------------------------------
+Arts
+
+SQL> create table Student
+  2  (reg_no number(5) primary key,
+  3  name varchar2(100) NOT NULL,
+  4  class varchar2(100) NOT NULL,
+  5  cno number(5) references Competition(cno) on delete cascade);
+
+Table created.
+
+SQL> describe Student;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ REG_NO                                    NOT NULL NUMBER(5)
+ NAME                                      NOT NULL VARCHAR2(100)
+ CLASS                                     NOT NULL VARCHAR2(100)
+ CNO                                                NUMBER(5)
+
+SQL> insert into Student values (10001,'Abhijeet Gawas','FY MCA',2);
+
+1 row created.
+
+SQL> insert into Student values (10002,'Ameya Kulkarni','FY MCA',3);
+
+1 row created.
+
+SQL> insert into Student values (10003,'Sourabh Palande','FY MCA',1);
+
+1 row created.
+
+SQL> insert into Student values (10004,'Rohan Kamble','FY MCA',4);
+
+1 row created.
+
+SQL> insert into Student values (10005,'Shubham Mathur','SY MCA',2);
+
+1 row created.
+
+SQL> insert into Student values (10006,'Narayan Das','SY MCA',1);
+
+1 row created.
+
+SQL> insert into Student values (10007,'Manoj Desai','SY MCA',3);
+
+1 row created.
+
+SQL> insert into Student values (10008,'Ritvik Mathur','SY MCA',4);
+
+1 row created.
+
+SQL> insert into Student values (10009,'Kishore Rane','TY MCA',1);
+
+1 row created.
+
+SQL> insert into Student values (10010,'Ranjit Desale','TY MCA',2);
+
+1 row created.
+
+SQL> insert into Student values (10011,'Suraj Mathew','TY MCA',3);
+
+1 row created.
+
+SQL> insert into Student values (10012,'Jayant Joshi','TY MCA',4);
+
+1 row created.
+
+SQL> insert into Student values (10013,'Rahul Jadhav','FY MCA',1);
+
+1 row created.
+
+SQL> insert into Student values (10014,'Aniket Gorde','SY MCA',2);
+
+1 row created.
+
+SQL> insert into Student values (10015,'Nilesh Mathur','FY MCA',1);
+
+1 row created.
+
+SQL> insert into Student values (10016,'Lokesh Rahul','TY MCA',4);
+
+1 row created.
+
+SQL> select * from Student;
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10001
+Abhijeet Gawas
+FY MCA
+         2
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10002
+Ameya Kulkarni
+FY MCA
+         3
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10003
+Sourabh Palande
+FY MCA
+         1
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10004
+Rohan Kamble
+FY MCA
+         4
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10005
+Shubham Mathur
+SY MCA
+         2
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10006
+Narayan Das
+SY MCA
+         1
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10007
+Manoj Desai
+SY MCA
+         3
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10008
+Ritvik Mathur
+SY MCA
+         4
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10009
+Kishore Rane
+TY MCA
+         1
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10010
+Ranjit Desale
+TY MCA
+         2
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10011
+Suraj Mathew
+TY MCA
+         3
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10012
+Jayant Joshi
+TY MCA
+         4
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10013
+Rahul Jadhav
+FY MCA
+         1
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10014
+Aniket Gorde
+SY MCA
+         2
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10015
+Nilesh Mathur
+FY MCA
+         1
+
+
+    REG_NO
+----------
+NAME
+--------------------------------------------------------------------------------
+CLASS
+--------------------------------------------------------------------------------
+       CNO
+----------
+     10016
+Lokesh Rahul
+TY MCA
+         4
+
+
+16 rows selected.
+
+SQL> create table Competition_Student_Record
+  2  (cno number(5) references Competition(cno) on delete cascade,
+  3  reg_no number(5) references Student(reg_no) on delete cascade,
+  4  rank number(1) NOT NULL CHECK(rank in (1,2,3)),
+  5  year number(4) NOT NULL CHECK(year>2010));
+
+Table created.
+
+SQL> describe Competition_Student_Record;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CNO                                                NUMBER(5)
+ REG_NO                                             NUMBER(5)
+ RANK                                      NOT NULL NUMBER(1)
+ YEAR                                      NOT NULL NUMBER(4)
+
+SQL> insert into Competition_Student_Record values (1,10003,1,2014);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (1,10015,2,2014);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (1,10009,3,2014);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (2,10001,1,2014);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (2,10005,2,2014);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (2,10014,3,2014);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (3,10002,1,2015);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (3,10007,2,2015);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (3,10011,3,2015);
+
+1 row created.
+SQL> insert into Competition_Student_Record values (4,10004,1,2015);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (4,10012,2,2015);
+
+1 row created.
+
+SQL> insert into Competition_Student_Record values (4,10008,3,2015);
+
+1 row created.
+
+SQL> select * from Competition_Student_Record;
+
+       CNO     REG_NO       RANK       YEAR
+---------- ---------- ---------- ----------
+         1      10003          1       2014
+         1      10015          2       2014
+         1      10009          3       2014
+         2      10001          1       2014
+         2      10005          2       2014
+         2      10014          3       2014
+         3      10002          1       2015
+         3      10007          2       2015
+         3      10011          3       2015
+         4      10004          1       2015
+         4      10012          2       2015
+
+       CNO     REG_NO       RANK       YEAR
+---------- ---------- ---------- ----------
+         4      10008          3       2015
+
+12 rows selected.
+
+Q1.  Display the student from class FY MCA and participated in ‘E-Rangoli’ competition.
+Sol:
+SQL> select S.name
+  2  from Student S, Competition C
+  3  where C.cno = S.cno
+  4  and C.cname = 'E-Rangoli' and S.class='FY MCA';
+
+NAME
+--------------------------------------------------------------------------------
+Sourabh Palande
+Rahul Jadhav
+Nilesh Mathur
+
+Q2. Find the number of students for programming competition.
+Sol:
+SQL> select count(S.reg_no)
+  2  from Student S, Competition C
+  3  where C.cno = S.cno
+  4  and ctype='Programming';
+
+COUNT(S.REG_NO)
+---------------
+              4
+
+Q3. Display names of first three winner of each competition.
+Sol:
+SQL> select S.name, CSR.rank, C.cname
+  2  from Competition C, Student S, Competition_Student_Record CSR
+  3  where C.cno = CSR.cno and S.reg_no = CSR.reg_no
+  4  order by CSR.rank;
+
+NAME
+--------------------------------------------------------------------------------
+      RANK
+----------
+CNAME
+--------------------------------------------------------------------------------
+Ameya Kulkarni
+         1
+Football Tournament
+
+Abhijeet Gawas
+         1
+CodeVita
+
+NAME
+--------------------------------------------------------------------------------
+      RANK
+----------
+CNAME
+--------------------------------------------------------------------------------
+
+Sourabh Palande
+         1
+E-Rangoli
+
+Rohan Kamble
+         1
+
+NAME
+--------------------------------------------------------------------------------
+      RANK
+----------
+CNAME
+--------------------------------------------------------------------------------
+Elementary Competition
+
+Nilesh Mathur
+         2
+E-Rangoli
+
+Shubham Mathur
+
+NAME
+--------------------------------------------------------------------------------
+      RANK
+----------
+CNAME
+--------------------------------------------------------------------------------
+         2
+CodeVita
+
+Manoj Desai
+         2
+Football Tournament
+
+
+NAME
+--------------------------------------------------------------------------------
+      RANK
+----------
+CNAME
+--------------------------------------------------------------------------------
+Jayant Joshi
+         2
+Elementary Competition
+
+Suraj Mathew
+         3
+Football Tournament
+
+NAME
+--------------------------------------------------------------------------------
+      RANK
+----------
+CNAME
+--------------------------------------------------------------------------------
+
+Aniket Gorde
+         3
+CodeVita
+
+Kishore Rane
+         3
+
+NAME
+--------------------------------------------------------------------------------
+      RANK
+----------
+CNAME
+--------------------------------------------------------------------------------
+E-Rangoli
+
+Ritvik Mathur
+         3
+Elementary Competition
+
+12 rows selected.
+
+Q4. Display total number of competitions in held in year 2014.
+Sol:
+SQL> select count(distinct C.cname)
+  2  from Competition C, Competition_Student_Record CSR
+  3  where C.cno = CSR.cno and CSR.year = 2014;
+
+COUNT(DISTINCTC.CNAME)
+----------------------
+                     2
