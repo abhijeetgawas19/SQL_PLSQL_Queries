@@ -1,0 +1,342 @@
+Q23. Consider the following Entities and Relationship.
+Plan (plan_no,plan_name,no_of_free_calls,free_call_time,fixed_amount)
+Customer (cust_no,cust_name,phone,mobile_no)
+Relation between Plan and Customer is One to Many.
+Constraints: Primary Key.
+Sol:
+SQL> create table Plan
+  2  (plan_no number(5) primary key,
+  3  plan_name varchar2(100) NOT NULL,
+  4  no_of_free_calls number(4) NOT NULL check(no_of_free_calls>0),
+  5  free_call_minutes number(4) NOT NULL check(free_call_minutes>0),
+  6  fixed_amount number(5) NOT NULL check(fixed_amount>0));
+
+Table created.
+
+SQL> describe Plan;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PLAN_NO                                   NOT NULL NUMBER(5)
+ PLAN_NAME                                 NOT NULL VARCHAR2(100)
+ NO_OF_FREE_CALLS                          NOT NULL NUMBER(4)
+ FREE_CALL_MINUTES                         NOT NULL NUMBER(4)
+ FIXED_AMOUNT                              NOT NULL NUMBER(5)
+
+SQL> insert into Plan values (1,'Bachelor Plan',125,500,175);
+
+1 row created.
+
+SQL> insert into Plan values (2,'Lets Rock',175,750,250);
+
+1 row created.
+
+SQL> insert into Plan values (3,'Big Bully',225,1250,300);
+
+1 row created.
+
+SQL> insert into Plan values (4,'Silver Tuxedo',275,1500,450);
+
+1 row created.
+
+SQL> insert into Plan values (5,'Go Max',325,2000,500);
+
+1 row created.
+
+SQL> insert into Plan values (6,'Minimal Beni',25,100,85);
+
+1 row created.
+
+SQL> select * from Plan;
+
+   PLAN_NO
+----------
+PLAN_NAME
+--------------------------------------------------------------------------------
+NO_OF_FREE_CALLS FREE_CALL_MINUTES FIXED_AMOUNT
+---------------- ----------------- ------------
+         1
+Bachelor Plan
+             125               500          175
+
+         2
+Lets Rock
+             175               750          250
+
+   PLAN_NO
+----------
+PLAN_NAME
+--------------------------------------------------------------------------------
+NO_OF_FREE_CALLS FREE_CALL_MINUTES FIXED_AMOUNT
+---------------- ----------------- ------------
+
+         3
+Big Bully
+             225              1250          300
+
+         4
+Silver Tuxedo
+
+   PLAN_NO
+----------
+PLAN_NAME
+--------------------------------------------------------------------------------
+NO_OF_FREE_CALLS FREE_CALL_MINUTES FIXED_AMOUNT
+---------------- ----------------- ------------
+             275              1500          450
+
+         5
+Go Max
+             325              2000          500
+
+         6
+
+   PLAN_NO
+----------
+PLAN_NAME
+--------------------------------------------------------------------------------
+NO_OF_FREE_CALLS FREE_CALL_MINUTES FIXED_AMOUNT
+---------------- ----------------- ------------
+Minimal Beni
+              25               100           85
+
+
+6 rows selected.
+
+SQL> create table Customer
+  2  (cust_no number(5) primary key,
+  3  cust_name varchar2(100) NOT NULL,
+  4  mobile_no varchar2(10) NOT NULL,
+  5  plan_no number(5) references Plan(plan_no) on delete cascade);
+
+Table created.
+
+SQL> describe Customer;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ CUST_NO                                   NOT NULL NUMBER(5)
+ CUST_NAME                                 NOT NULL VARCHAR2(100)
+ MOBILE_NO                                 NOT NULL VARCHAR2(10)
+ PLAN_NO                                            NUMBER(5)
+
+SQL> insert into Customer values (101,'Abhijeet Gawas','9881783270',1);
+
+1 row created.
+
+SQL> insert into Customer values (102,'Ameya Kulkarni','7709174195',2);
+
+1 row created.
+
+SQL> insert into Customer values (103,'Sourabh Palande','9850614076',3);
+
+1 row created.
+
+SQL> insert into Customer values (104,'Prateek Roy','9812345200',4);
+
+1 row created.
+
+SQL> insert into Customer values (105,'Chaitanya Joshi','9541256320',5);
+
+1 row created.
+
+SQL> insert into Customer values (106,'Pratiksha Walunj','9420204905',6);
+
+1 row created.
+
+SQL> insert into Customer values (107,'Rani Ghodke','8787412568',1);
+
+1 row created.
+
+SQL> insert into Customer values (108,'Surpriya Khandagale','9874002585',2);
+
+1 row created.
+
+SQL> insert into Customer values (109,'Prajakta Shinde','7709652314',3);
+
+1 row created.
+
+SQL> insert into Customer values (110,'Lakshman Khumbar','9809652314',5);
+
+1 row created.
+
+SQL> select * from Customer;
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO     PLAN_NO
+---------- ----------
+       101
+Abhijeet Gawas
+9881783270          1
+
+       102
+Ameya Kulkarni
+7709174195          2
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO     PLAN_NO
+---------- ----------
+
+       103
+Sourabh Palande
+9850614076          3
+
+       104
+Prateek Roy
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO     PLAN_NO
+---------- ----------
+9812345200          4
+
+       105
+Chaitanya Joshi
+9541256320          5
+
+       106
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO     PLAN_NO
+---------- ----------
+Pratiksha Walunj
+9420204905          6
+
+       107
+Rani Ghodke
+8787412568          1
+
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO     PLAN_NO
+---------- ----------
+       108
+Surpriya Khandagale
+9874002585          2
+
+       109
+Prajakta Shinde
+7709652314          3
+
+   CUST_NO
+----------
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO     PLAN_NO
+---------- ----------
+
+       110
+Lakshman Khumbar
+9809652314          5
+
+
+10 rows selected.
+
+Q1. Display the plan having minimum response.
+Sol:
+SQL> select P.plan_name, count(C.cust_no)
+  2  from Plan P, Customer C
+  3  where P.plan_no = C.plan_no
+  4  group by P.plan_name
+  5  having count(C.cust_no) in (0,1);
+
+PLAN_NAME
+--------------------------------------------------------------------------------
+COUNT(C.CUST_NO)
+----------------
+Silver Tuxedo
+               1
+
+Minimal Beni
+               1
+
+Q2. Display customer details starting with mobile number with 98.
+Sol:
+SQL> select C.cust_name, C.mobile_no
+  2  from Customer C
+  3  where C.mobile_no like '98%';
+
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO
+----------
+Abhijeet Gawas
+9881783270
+
+Sourabh Palande
+9850614076
+
+Prateek Roy
+9812345200
+
+
+CUST_NAME
+--------------------------------------------------------------------------------
+MOBILE_NO
+----------
+Surpriya Khandagale
+9874002585
+
+Lakshman Khumbar
+9809652314
+
+Q3. Display customer details that are getting less number of free calls than that of plan ‘Lets Rock’.
+Sol:
+SQL> select C.cust_name, P.plan_name, P.no_of_free_calls
+  2  from Customer C, Plan P
+  3  where P.plan_no = C.plan_no
+  4  and P.no_of_free_calls < (select P.no_of_free_calls from Plan P
+  5  where P.plan_name='Lets Rock');
+
+CUST_NAME
+--------------------------------------------------------------------------------
+PLAN_NAME
+--------------------------------------------------------------------------------
+NO_OF_FREE_CALLS
+----------------
+Abhijeet Gawas
+Bachelor Plan
+             125
+
+Pratiksha Walunj
+Minimal Beni
+              25
+
+CUST_NAME
+--------------------------------------------------------------------------------
+PLAN_NAME
+--------------------------------------------------------------------------------
+NO_OF_FREE_CALLS
+----------------
+
+Rani Ghodke
+Bachelor Plan
+             125
+
+Q4. Find the plan whose fixed amount is greater than 250 and less than 500.
+Sol:
+SQL> select P.plan_name, P.fixed_amount
+  2  from Plan P
+  3  where P.fixed_amount > 250 and P.fixed_amount < 500;
+
+PLAN_NAME
+--------------------------------------------------------------------------------
+FIXED_AMOUNT
+------------
+Big Bully
+         300
+
+Silver Tuxedo
+         450
