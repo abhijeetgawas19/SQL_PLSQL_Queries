@@ -1,0 +1,332 @@
+Q24. Consider the following Entities and Relationship.
+Employee (emp_id,emp_name,address)
+Investment (inv_no,inv_name,inv_data,inv_amount)
+Relation between Employee and Investment is One to Many.
+Constraints: Primary Key, inv_amount > 0.
+Sol:
+
+SQL> create table Employee
+  2  (eno number(5) primary key,
+  3  ename varchar2(100) NOT NULL,
+  4  eadd varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Employee;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ENO                                       NOT NULL NUMBER(5)
+ ENAME                                     NOT NULL VARCHAR2(100)
+ EADD                                      NOT NULL VARCHAR2(100)
+
+SQL> insert into Employee values (1,'Abhijeet Gawas','Pune');
+
+1 row created.
+
+SQL> insert into Employee values (2,'Ameya Kulkarni','Pune');
+
+1 row created.
+
+SQL> insert into Employee values (3,'Sourabh Palande','Mumbai');
+
+1 row created.
+
+SQL> insert into Employee values (4,'Rohan Kamble','Mumbai');
+
+1 row created.
+
+SQL> insert into Employee values (5,'Prateek Roy','Patna');
+
+1 row created.
+
+SQL> select * from Employee;
+
+       ENO
+----------
+ENAME
+--------------------------------------------------------------------------------
+EADD
+--------------------------------------------------------------------------------
+         1
+Abhijeet Gawas
+Pune
+
+         2
+Ameya Kulkarni
+Pune
+
+       ENO
+----------
+ENAME
+--------------------------------------------------------------------------------
+EADD
+--------------------------------------------------------------------------------
+
+         3
+Sourabh Palande
+Mumbai
+
+         4
+Rohan Kamble
+
+       ENO
+----------
+ENAME
+--------------------------------------------------------------------------------
+EADD
+--------------------------------------------------------------------------------
+Mumbai
+
+         5
+Prateek Roy
+Patna
+
+SQL> create table Investment
+  2  (inv_no number(5) primary key,
+  3  inv_name varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Investment;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ INV_NO                                    NOT NULL NUMBER(5)
+ INV_NAME                                  NOT NULL VARCHAR2(100)
+
+SQL> insert into Investment values (1,'Mutual Funds');
+
+1 row created.
+
+SQL> insert into Investment values (2,'Gold Bonds');
+
+1 row created.
+
+SQL> insert into Investment values (3,'Insurance');
+
+1 row created.
+
+SQL> insert into Investment values (4,'Stocks');
+
+1 row created.
+
+SQL> insert into Investment values (5,'IPO');
+
+1 row created.
+
+SQL> select * from Investment;
+
+    INV_NO
+----------
+INV_NAME
+--------------------------------------------------------------------------------
+         1
+Mutual Funds
+
+         2
+Gold Bonds
+
+         3
+Insurance
+
+
+    INV_NO
+----------
+INV_NAME
+--------------------------------------------------------------------------------
+         4
+Stocks
+
+         5
+IPO
+
+SQL> create table Employee_Investment
+  2  (eno number(5) references Employee(eno) on delete cascade,
+  3  inv_no number(5) references Investment(inv_no) on delete cascade,
+  4  inv_date date NOT NULL,
+  5  inv_amount number(10) NOT NULL CHECK(inv_amount > 0));
+
+Table created.
+
+SQL> describe Employee_Investment;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ ENO                                                NUMBER(5)
+ INV_NO                                             NUMBER(5)
+ INV_DATE                                  NOT NULL DATE
+ INV_AMOUNT                                NOT NULL NUMBER(10)
+
+SQL> insert into Employee_Investment values (1,1,'02-JAN-2013',1500000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (1,2,'05-JAN-2013',750000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (1,5,'07-JAN-2013',550000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (2,3,'01-FEB-2013',770000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (2,5,'11-FEB-2013',8745200);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (3,1,'22-FEB-2013',55000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (3,4,'28-FEB-2013',255000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (4,5,'05-MAR-2013',450000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (5,1,'11-MAR-2013',750000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (5,3,'20-MAR-2013',125000);
+
+1 row created.
+
+SQL> insert into Employee_Investment values (5,5,'30-MAR-2013',725000);
+
+1 row created.
+
+SQL> select * from Employee_Investment;
+
+       ENO     INV_NO INV_DATE  INV_AMOUNT
+---------- ---------- --------- ----------
+         1          1 02-JAN-13    1500000
+         1          2 05-JAN-13     750000
+         1          5 07-JAN-13     550000
+         2          3 01-FEB-13     770000
+         2          5 11-FEB-13    8745200
+         3          1 22-FEB-13      55000
+         3          4 28-FEB-13     255000
+         4          5 05-MAR-13     450000
+         5          1 11-MAR-13     750000
+         5          3 20-MAR-13     125000
+         5          5 30-MAR-13     725000
+
+11 rows selected.
+
+Q1. Display employee details who have invested more than 1,00,000.
+Sol:
+
+SQL> select distinct E.ename, E.eadd
+  2  from Employee E, Employee_Investment EI
+  3  where E.eno = EI.eno
+  4  and EI.inv_amount > 100000;
+
+ENAME
+--------------------------------------------------------------------------------
+EADD
+--------------------------------------------------------------------------------
+Abhijeet Gawas
+Pune
+
+Ameya Kulkarni
+Pune
+
+Sourabh Palande
+Mumbai
+
+
+ENAME
+--------------------------------------------------------------------------------
+EADD
+--------------------------------------------------------------------------------
+Prateek Roy
+Patna
+
+Rohan Kamble
+Mumbai
+
+Q2. Display employee wise total investment amount.
+Sol:
+SQL> select E.ename, sum(EI.inv_amount)
+  2  from Employee E, Employee_Investment EI
+  3  where E.eno = EI.eno
+  4  group by E.ename
+  5  order by sum(EI.inv_amount) desc;
+
+ENAME
+--------------------------------------------------------------------------------
+SUM(EI.INV_AMOUNT)
+------------------
+Ameya Kulkarni
+           9515200
+
+Abhijeet Gawas
+           2800000
+
+Prateek Roy
+           1600000
+
+
+ENAME
+--------------------------------------------------------------------------------
+SUM(EI.INV_AMOUNT)
+------------------
+Rohan Kamble
+            450000
+
+Sourabh Palande
+            310000
+
+Q3. Display the employee names who invest on date 2nd Jan 2013.
+Sol:
+SQL> select E.ename
+  2  from Employee E, Employee_Investment EI
+  3  where E.eno = EI.eno
+  4  and inv_date = '02-JAN-2013';
+
+ENAME
+--------------------------------------------------------------------------------
+Abhijeet Gawas
+
+Q4. Display the employee having more than 2 investment.
+Sol:
+SQL> select E.ename, count(EI.eno)
+  2  from Employee E, Employee_Investment EI
+  3  where E.eno = EI.eno
+  4  group by E.ename
+  5  having count(EI.eno) >= 2;
+
+ENAME
+--------------------------------------------------------------------------------
+COUNT(EI.ENO)
+-------------
+Sourabh Palande
+            2
+
+Abhijeet Gawas
+            3
+
+Ameya Kulkarni
+            2
+
+
+ENAME
+--------------------------------------------------------------------------------
+COUNT(EI.ENO)
+-------------
+Prateek Roy
+            3
+Q5. Find the average investment of employees of Pune.
+Sol:
+SQL> select avg(EI.inv_amount)
+  2  from Employee E, Employee_Investment EI
+  3  where E.eno = EI.eno
+  4  and E.eadd = 'Pune';
+
+AVG(EI.INV_AMOUNT)
+------------------
+           2463040
