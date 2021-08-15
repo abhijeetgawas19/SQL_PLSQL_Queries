@@ -1,0 +1,328 @@
+Q25. Consider the following Entities and Relationship.
+Politicians (pno,pname,telephone_no)
+Party (party_code,party_name)
+Relation between Politicians and Party is Many to One.
+Constraints: Primary Key.
+Sol:
+SQL> create table Party
+  2  (party_code number(5) primary key,
+  3  party_name varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Party;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PARTY_CODE                                NOT NULL NUMBER(5)
+ PARTY_NAME                                NOT NULL VARCHAR2(100)
+
+SQL> insert into Party values (101,'Bhartiya Janta Party');
+
+1 row created.
+
+SQL> insert into Party values (102,'Aam Aadmi Janta Party');
+
+1 row created.
+
+SQL> insert into Party values (103,'Congress');
+
+1 row created.
+
+SQL> insert into Party values (104,'Republic of Congress');
+
+1 row created.
+
+SQL> insert into Party values (105,'Shivsena');
+
+1 row created.
+
+SQL> select * from Party;
+
+PARTY_CODE
+----------
+PARTY_NAME
+--------------------------------------------------------------------------------
+       101
+Bhartiya Janta Party
+
+       102
+Aam Aadmi Janta Party
+
+       103
+Congress
+
+
+PARTY_CODE
+----------
+PARTY_NAME
+--------------------------------------------------------------------------------
+       104
+Republic of Congress
+
+       105
+Shivsena
+
+SQL> create table Politician
+  2  (pno number(5) primary key,
+  3  pname varchar2(100) NOT NULL,
+  4  contact number(10) NOT NULL,
+  5  party_code number(5) references Party(party_code) on delete cascade);
+
+Table created.
+
+SQL> describe Politician;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PNO                                       NOT NULL NUMBER(5)
+ PNAME                                     NOT NULL VARCHAR2(100)
+ CONTACT                                   NOT NULL NUMBER(10)
+ PARTY_CODE                                         NUMBER(5)
+
+SQL> insert into Politician values (1,'Narendra Modi',9852365478,101);
+
+1 row created.
+
+SQL> insert into Politician values (2,'Kirit Swamy',7412589632,103);
+
+1 row created.
+
+SQL> insert into Politician values (3,'Narsima Rao',921478532,105);
+
+1 row created.
+
+SQL> insert into Politician values (4,'Manohar Parikar',8545632145,102);
+
+1 row created.
+
+SQL> insert into Politician values (5,'Radhika Apte',9125745369,101);
+
+1 row created.
+
+SQL> insert into Politician values (6,'Deepali Sayaad',8423651203,104);
+
+1 row created.
+
+SQL> insert into Politician values (7,'Johnny Raut',9452145398,104);
+
+1 row created.
+
+SQL> insert into Politician values (8,'Sourabh Kalaskar',7531485632,105);
+
+1 row created.
+
+SQL> insert into Politician values (9,'Normi Chattergi',9712365478,101);
+
+1 row created.
+
+SQL> insert into Politician values (10,'Vijay Kumar Rao',8423651478,105);
+
+1 row created.
+
+SQL> select * from Politician;
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT PARTY_CODE
+---------- ----------
+         1
+Narendra Modi
+9852365478        101
+
+         2
+Kirit Swamy
+7412589632        103
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT PARTY_CODE
+---------- ----------
+
+         3
+Narsima Rao
+ 921478532        105
+
+         4
+Manohar Parikar
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT PARTY_CODE
+---------- ----------
+8545632145        102
+
+         5
+Radhika Apte
+9125745369        101
+
+         6
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT PARTY_CODE
+---------- ----------
+Deepali Sayaad
+8423651203        104
+
+         7
+Johnny Raut
+9452145398        104
+
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT PARTY_CODE
+---------- ----------
+         8
+Sourabh Kalaskar
+7531485632        105
+
+         9
+Normi Chattergi
+9712365478        101
+
+       PNO
+----------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT PARTY_CODE
+---------- ----------
+
+        10
+Vijay Kumar Rao
+8423651478        105
+
+
+10 rows selected.
+
+Q1. Display party names in ascending order.
+Sol:
+SQL> select P.party_name
+  2  from Party p
+  3  order by P.party_name asc;
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+Aam Aadmi Janta Party
+Bhartiya Janta Party
+Congress
+Republic of Congress
+Shivsena
+
+Q2. Find the party who is having less number of members than ‘Congress’ Party.
+Sol:
+SQL> select P.party_name, count(Po.pno)
+  2  from Party P, Politician Po
+  3  where P.party_code = Po.party_code
+  4  group by P.party_name
+  5  having count(Po.pno) > ( select count(Po.pno) from
+  6  Party P, Politician Po
+  7  where P.party_code = Po.party_code and P.party_name = 'Congress');
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+COUNT(PO.PNO)
+-------------
+Shivsena
+            3
+
+Republic of Congress
+            2
+
+Bhartiya Janta Party
+            3
+
+Q3. Display party wise politician names with details.
+Sol:
+SQL> select P.party_name , Po.pname
+  2  from Party P, Politician Po
+  3  where P.party_code = Po.party_code
+  4  order by P.party_name;
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Aam Aadmi Janta Party
+Manohar Parikar
+
+Bhartiya Janta Party
+Narendra Modi
+
+Bhartiya Janta Party
+Radhika Apte
+
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Bhartiya Janta Party
+Normi Chattergi
+
+Congress
+Kirit Swamy
+
+Republic of Congress
+Deepali Sayaad
+
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Republic of Congress
+Johnny Raut
+
+Shivsena
+Vijay Kumar Rao
+
+Shivsena
+Sourabh Kalaskar
+
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Shivsena
+Narsima Rao
+
+
+10 rows selected.
+
+Q4. Display the party name with details of politicians whose name include ‘Rao’.
+SQL> select P.party_name, Po.pname, Po.contact
+  2  from Party P, Politician Po
+  3  where P.party_code = Po.party_code
+  4  and Po.pname like '%Rao%';
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT
+----------
+Shivsena
+Vijay Kumar Rao
+8423651478
+
+Shivsena
+Narsima Rao
+ 921478532
+
+PARTY_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+   CONTACT
+----------
