@@ -1,0 +1,569 @@
+Q26. Consider the following Entities and Relations.
+Game (game_no,game_name,no_of_players,coach_name)
+Player (pid,pname,address,club_name)
+Relation between Games and Player is Many to Many.
+Constraints: Primary Key, no_of_players should be > 0
+Sol:
+
+SQL> create table Game
+  2  (game_no number(5) primary key,
+  3  game_name varchar2(100) NOT NULL UNIQUE,
+  4  no_players number(5) NOT NULL check(no_players>0),
+  5  coach_name varchar2(100) NOT NULL);
+
+Table created.
+
+SQL> describe Game;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ GAME_NO                                   NOT NULL NUMBER(5)
+ GAME_NAME                                 NOT NULL VARCHAR2(100)
+ NO_PLAYERS                                NOT NULL NUMBER(5)
+ COACH_NAME                                NOT NULL VARCHAR2(100)
+
+SQL> insert into Game values (101,'Cricket',11,'Diwen Tiwari');
+
+1 row created.
+
+SQL> insert into Game values (102,'Badminton',1,'Rakhi Parekh');
+
+1 row created.
+
+SQL> insert into Game values (103,'Football',11,'Rupesh Mathur');
+
+1 row created.
+
+SQL> insert into Game values (104,'Tennis',1,'Gauri Kumar');
+
+1 row created.
+
+SQL> insert into Game values (105,'Rugby',12,'Roop Rathod');
+
+1 row created.
+
+SQL> select * from Game;
+
+   GAME_NO
+----------
+GAME_NAME
+--------------------------------------------------------------------------------
+NO_PLAYERS
+----------
+COACH_NAME
+--------------------------------------------------------------------------------
+       101
+Cricket
+        11
+Diwen Tiwari
+
+
+   GAME_NO
+----------
+GAME_NAME
+--------------------------------------------------------------------------------
+NO_PLAYERS
+----------
+COACH_NAME
+--------------------------------------------------------------------------------
+       102
+Badminton
+         1
+Rakhi Parekh
+
+
+   GAME_NO
+----------
+GAME_NAME
+--------------------------------------------------------------------------------
+NO_PLAYERS
+----------
+COACH_NAME
+--------------------------------------------------------------------------------
+       103
+Football
+        11
+Rupesh Mathur
+
+
+   GAME_NO
+----------
+GAME_NAME
+--------------------------------------------------------------------------------
+NO_PLAYERS
+----------
+COACH_NAME
+--------------------------------------------------------------------------------
+       104
+Tennis
+         1
+Gauri Kumar
+
+
+   GAME_NO
+----------
+GAME_NAME
+--------------------------------------------------------------------------------
+NO_PLAYERS
+----------
+COACH_NAME
+--------------------------------------------------------------------------------
+       105
+Rugby
+        12
+Roop Rathod
+
+SQL> create table Player
+  2  (pid number(5) primary key,
+  3  pname varchar2(100) NOT NULL,
+  4  address varchar2(200) NOT NULL,
+  5  club_name varchar2(100) NOT NULL,
+  6  game_no number(5) references Game(game_no) ON DELETE CASCADE);
+
+Table created.
+
+SQL> describe Player;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ PID                                       NOT NULL NUMBER(5)
+ PNAME                                     NOT NULL VARCHAR2(100)
+ ADDRESS                                   NOT NULL VARCHAR2(200)
+ CLUB_NAME                                 NOT NULL VARCHAR2(100)
+ GAME_NO                                            NUMBER(5)
+
+SQL> insert into player values (1,'Abhijeet Gawas','Pune','Salgoankar FC',103);
+
+1 row created.
+
+SQL> insert into player values (2,'Prateek Roy',’Patna ,'Tigers',101);
+
+1 row created.
+
+SQL> insert into player values (3,'Ashish Srivastav','Pune','Tigers',101);
+
+1 row created.
+
+SQL> insert into player values (4,'Prajakta Singh','Mumbai','Renegates',102);
+
+1 row created.
+
+SQL> insert into player values (5,'Rushikesh Mathur','Ludhiyana','Sparks',103);
+
+1 row created.
+
+SQL> insert into player values (6,'Sourabh Palande','Pune','Tigers',101);
+
+1 row created.
+
+SQL> insert into player values (7,'Silivester Mattew','Panjim','Jaguars',104);
+
+1 row created.
+
+SQL> insert into player values (8,'Ridhi Dogra','Suratkal','Jaguar',105);
+
+1 row created.
+
+SQL> insert into player values (9,'Kaushal Mandal','Pune','Knights',104);
+
+1 row created.
+
+SQL> insert into player values (10,'Abhishek Rao','Kolkata','Jaguar',105);
+
+1 row created.
+
+SQL> select * from player;
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         1
+Abhijeet Gawas
+Pune
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Salgoankar FC
+       103
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         2
+Prateek Roy
+Patna
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Tigers
+       101
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         3
+Ashish Srivastav
+Pune
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Tigers
+       101
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         4
+Prajakta Singh
+Mumbai
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Renegates
+       102
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         5
+Rushikesh Mathur
+Ludhiyana
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Sparks
+       103
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         6
+Sourabh Palande
+Pune
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Tigers
+       101
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         7
+Silivester Mattew
+Panjim
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Jaguars
+       104
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         8
+Ridhi Dogra
+Suratkal
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Jaguar
+       105
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+         9
+Kaushal Mandal
+Pune
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Knights
+       104
+
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+        10
+Abhishek Rao
+Kolkata
+
+       PID
+----------
+PNAME
+--------------------------------------------------------------------------------
+ADDRESS
+--------------------------------------------------------------------------------
+CLUB_NAME
+--------------------------------------------------------------------------------
+   GAME_NO
+----------
+Jaguar
+       105
+
+
+10 rows selected.
+
+Q1. Display players from ‘Pune’.
+Sol:
+SQL> select P.pname
+  2  from Player P
+  3  where P.address = 'Pune';
+
+PNAME
+--------------------------------------------------------------------------------
+Abhijeet Gawas
+Ashish Srivastav
+Sourabh Palande
+Kaushal Mandal
+
+Q2. List all games required more than 4 players.
+Sol:
+SQL> select G.game_name, G.no_players
+  2  from Game G
+  3  where G.no_players > 4;
+
+GAME_NAME
+--------------------------------------------------------------------------------
+NO_PLAYERS
+----------
+Cricket
+        11
+
+Football
+        11
+
+Rugby
+        12
+
+Q3. Find the total number of cricket players of ‘Tiger’ club.
+Sol:
+SQL> select count(P.pid)
+  2  from Player P, Game G
+  3  where G.game_no = P.game_no
+  4  and P.club_name = 'Tigers';
+
+COUNT(P.PID)
+------------
+           3
+
+Q4. Display games having more number of players than football.
+Sol:
+SQL> select G.game_name
+  2  from Game G
+  3  where G.no_players > (select G.no_players
+  4  from Game G
+  5  where G.game_name ='Football');
+
+GAME_NAME
+--------------------------------------------------------------------------------
+Rugby
+
+Q5. Display coach wise player details.
+Sol:
+SQL> select G.coach_name, P.pname
+  2  from Game G, Player P
+  3  where G.game_no = P.game_no
+  4  order by G.coach_name;
+
+COACH_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Diwen Tiwari
+Prateek Roy
+
+Diwen Tiwari
+Ashish Srivastav
+
+Diwen Tiwari
+Sourabh Palande
+
+
+COACH_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Gauri Kumar
+Kaushal Mandal
+
+Gauri Kumar
+Silivester Mattew
+
+Rakhi Parekh
+Prajakta Singh
+
+
+COACH_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Roop Rathod
+Abhishek Rao
+
+Roop Rathod
+Ridhi Dogra
+
+Rupesh Mathur
+Abhijeet Gawas
+
+
+COACH_NAME
+--------------------------------------------------------------------------------
+PNAME
+--------------------------------------------------------------------------------
+Rupesh Mathur
+Rushikesh Mathur
+
+
+10 rows selected.
